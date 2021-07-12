@@ -1,0 +1,17 @@
+application.type=layout
+application.code=gestaoDocumentos
+application.title=gestaoDocumentos
+application.description=gestaoDocumentos
+application.category=SYSTEM
+application.renderer=freemarker
+developer.code=dell-inspclei21
+developer.name=cleit
+developer.url=http://www.fluig.com
+layout.defaultSlot=SlotA
+layout.file=layout.ftl
+locale.file.base.name=gestaoDocumentos
+slot.SlotGlobalAlert=alertpopover
+slot.SlotInstantSearch=suggestsearch
+slot.SlotLogin=sociallogin
+slot.SlotMenu=menu
+slot.SlotUsePolicy=usepolicy
