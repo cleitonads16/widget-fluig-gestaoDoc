@@ -1,4 +1,4 @@
-var myLoading1 = FLUIGC.loading('#divLoading');
+
 var MyWidget = SuperWidget.extend({
     //variáveis da widget
     variavelNumerica: null,
@@ -9,49 +9,15 @@ var MyWidget = SuperWidget.extend({
 
         getArrayProject();
         
-        //Editar horas previstas e horas realizadas
-        $(".h-prev").dblclick(function () {
-            console.log('Cliquei Prev')
-            var conteudoOriginal = $(this).val();
-            $(this).addClass("celulaEmEdicao");
-            $(this).html("<input type='text' value='" + conteudoOriginal + "'/>");
-            $(this).children().first().focus();
-    
-            $(this).children().first().keypress(function (e) {
-                if (e.which == 13) {
-                    var novoConteudo = $(this).val();
-                    $(this).parent().text(novoConteudo).val(parseInt(novoConteudo));
-                    $(this).parent().removeClass("celulaEmEdicao");
-                }
-            });
-    
-            $(this).children().first().blur(function(){
-                $(this).parent().text(conteudoOriginal);
-                $(this).parent().removeClass("celulaEmEdicao");
-            });
-        });
-
-        $(".h-realiz").dblclick(function () {
-            console.log('Cliquei Realiz')
-            var conteudoOriginal = $(this).val();
-            $(this).addClass("celulaEmEdicao");
-            $(this).html("<input type='text' value='" + conteudoOriginal + "'/>");
-            $(this).children().first().focus();
-    
-            $(this).children().first().keypress(function (e) {
-                if (e.which == 13) {
-                    var novoConteudo = $(this).val();
-                    $(this).parent().text(novoConteudo).val(parseInt(novoConteudo));
-                    $(this).parent().removeClass("celulaEmEdicao");
-                    
-                }
-            })
-    
-            $(this).children().first().blur(function(){
-                $(this).parent().text(conteudoOriginal);
-                $(this).parent().removeClass("celulaEmEdicao");
-            });
-
+        //Filtar tabela
+        var $rows = $('#tnProjClient tr');
+        $('#campFiltro').keyup(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            
+            $rows.show().filter(function() {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
         });
         
     },
@@ -60,30 +26,18 @@ var MyWidget = SuperWidget.extend({
     bindings: {
         local: {
             'execute': ['click_executeAction'],
-            'calculoHoras': ['keypress_calculoHoras']
         },
         global: {}
     },
- 
-    executeAction: function(htmlElement, event) {
-        alert("Teste 2");
-    },
-
-    calculoHoras: function(){
-
-        var hPrev = $(".h-prev").val();
-        var hRealiz = $(".h-realiz").val();
-        var calculo = hPrev - hRealiz;
-    
-        console.log('CAUCULO:  '+calculo);
-    
-    }
     
 });
 
 
 function fnRefresh(){
-    getArrayProject();
+    console.log('REFRESH')
+    var myLoading1 = FLUIGC.loading('#divLoading');
+    myLoading1.show();
+    myLoading1.hide();
 }
 
 function getArrayProject(){
@@ -91,7 +45,8 @@ function getArrayProject(){
     var codCliente = "";
     var nomCliente = "";
 
-    myLoading1.show();
+
+    // myLoading1.show();
     //var c1 = DatasetFactory.createConstraint('projeto', 'OPV003', 'OPV003', ConstraintType.MUST);
     //var dsProjetosProtheus = DatasetFactory.getDataset('dsProjetosProtheus', null, new Array(c1), null);
 
@@ -102,6 +57,7 @@ function getArrayProject(){
         var c1 = DatasetFactory.createConstraint('codigo', dsProjetosProtheus.values[i].codigo_cliente, dsProjetosProtheus.values[i].codigo_cliente, ConstraintType.MUST);
         var c2 = DatasetFactory.createConstraint('loja', dsProjetosProtheus.values[i].loja, dsProjetosProtheus.values[i].loja, ConstraintType.MUST);
     	var dsClienteProtheus = DatasetFactory.getDataset('dsClienteProtheus', null, new Array(c1, c2), null);
+        
 
         if (dsClienteProtheus.values.length){
             codCliente = dsClienteProtheus.values[0].codigo;
@@ -113,14 +69,15 @@ function getArrayProject(){
             "<td>" + dsProjetosProtheus.values[i].descricao+"</td>" +
             "<td>"+nomCliente+"</td>" +
             "<td>Nome do Responsável</td>" +
-            '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto+'" onclick="fnArrayMIT(this);">MIT P</button></td>' +
-            "<td class='h-prev'>00:00</td>" +
-            "<td class='h-realiz'data-calculoHoras>00:00</td>" +
+            '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto+'" onclick="fnArrayMIT(this);calculoHoras()" data-documento>MIT P</button></td>' +
+            "<td><input type='number' id='horasPrevistas' class='form-control'/></td>" +
+            "<td><input type='number' id='horasRalizadas' class='form-control'/></td>" +
             "<td>Progresso</td>" +
             "</tr>";
+        
     }
     document.getElementById("arrayProj").innerHTML = html;
-    myLoading1.hide();
+   
 }
 
 function fnArrayMIT(campoID) {
@@ -223,6 +180,20 @@ function fnCloseSpanGraphic() {
     var modGraphic = document.getElementById('mdGraphicPerc');
 
     modGraphic.style.display = 'none';
+}
+
+function calculoHoras(){
+
+    var num1 = $("#horasPrevistas").val();
+    num1 = parseInt(num1);
+
+    var num2 = $("#horasRalizadas").val();;
+    num2 = parseInt(num2);
+
+    var sub  = num1-num2;
+
+    console.log('SUB: ' + sub)
+
 }
 
 

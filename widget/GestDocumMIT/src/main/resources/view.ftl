@@ -13,35 +13,36 @@
                             <label for="nomCoord">Data:</label>
                             <input type="text" id="nomCoord" name="nomCoord" class="form-control" readonly>
                         </div>
-                    </div>
+                    </div><br>
                     <div class="row">
-                        <div class="col-xs-6 col-md-4">
-                            <br>
-                            <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Responsável">
+                        <div class="col-md-11">
+                            <div class="form-group has-feedback">
+                                <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Digite Para Filtrar...">
+                                <i class="fluigicon fluigicon-search form-control-feedback"></i>
+                            </div>
                         </div>
-                        <div class="col-xs-6 col-md-2">
+                        <#--  <div class="col-xs-6 col-md-2">
                             <br>
-                            <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Código do Projeto">
-                        </div>
-                        <div class="col-xs-6 col-md-2">
-                            <br>
-                            <button type="button" id="btBusca" class="btn btn-default">Buscar</button>
+                            <input type="text" id="campFiltroCodProj" name="campFiltroCodProj" class="form-control" placeholder="Código do Projeto">
+                        </div>  -->
+                        <div class="btnAtualizar" style="width: -5px">
+                            <#--  <button type="button" id="btBusca" class="btn btn-default">Buscar</button>  -->
                             <button type="button" id="btRefresh" onclick="fnRefresh();" class="btn btn-default">Atualizar</button>
                         </div>
-                    </div><br></br>
+                    </div><br>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12" id="divLoading">
+                        <div class="divLoading" id="divLoading">
                             <table class="table table-striped table-bordered table-responsive" id="tnProjClient">
                                 <thead class="scroll-thead">
                                     <tr class="info">
-                                        <td><b>C&oacute;digo do Projeto</b></td>
-                                        <td><b>Nome do Projeto</b></td>
-                                        <td><b>Nome do Cliente</b></td>
-                                        <td><b>Respons&aacute;vel</b></td>
-                                        <td><b>Documento</b></td>
-                                        <td><b>Horas Previstas</b></td>
-                                        <td><b>Horas Realizadas</b></td>
-                                        <td><b>Progresso</b></td>
+                                        <th><b>Cod.Projeto</b></th>
+                                        <th><b>Nome do Projeto</b></th>
+                                        <th><b>Nome do Cliente</b></th>
+                                        <th><b>Respons&aacute;vel</b></th>
+                                        <th><b>Documento</b></th>
+                                        <th><b>Horas Previstas</b></th>
+                                        <th><b>Horas Realizadas</b></th>
+                                        <th><b>Progresso</b></th>
                                     </tr>
                                 </thead>
                                 <tbody id="arrayProj" class="scroll-tbody-y table-body">
@@ -122,8 +123,8 @@
                                 <div class="panel-heading">MIT</div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-xs-6 col-sm-4">
-                                            <table class="table table-striped table-bordered table-responsive">
+                                        <div class="tabModal">
+                                            <table id="tabelaModal" class="table table-striped table-bordered table-responsive">
                                                 <thead>
                                                     <tr class="info">
                                                         <td><b>Sequ&ecirc;ncia</b></td>
