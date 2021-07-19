@@ -51,8 +51,9 @@ body {
     cursor: pointer;
 }
 
-.divLoading {
-    height: 600px;
+.divLoading,
+.tabModal {
+    height: 350px;
     overflow-y: scroll;
     width: 100%;
   }
@@ -64,12 +65,18 @@ table {
     text-align: center;
     table-layout: fixed;
   }
+thead {
+    background-color: #58595B;
+}
+b {
+    color: white;
+}
 td, th {
     border: 1px solid black;
     overflow: hidden;
     text-overflow: ellipsis;
  }
-th {
+/* th {
     position: sticky;
     top: 0;
-  }
+  } */
