@@ -26,13 +26,15 @@ var MyWidget = SuperWidget.extend({
         });
         
     },
+
+    
   
     //BIND de eventos
     bindings: {
         local: {
-            'execute': ['click_executeAction'],
-            'graficos': ['click_fnViewGrafico'],
-            'tipo_graph': ['change_fnGrafico']
+            'testeGraf': ['click_grafcoDoughnut'],
+            'graficos': ['click_modal'],
+            'tipo_graph': ['click_fnGrafico']
         },
         global: {}
     },
@@ -65,127 +67,62 @@ var MyWidget = SuperWidget.extend({
         
     },
 
-    // função invocada na mudança dos itens do select
-    fnGrafico: function(){
-   	
-    	// exemplo de array com valores fixos
-    	var array_fixo = [65, 59, 80, 81, 56, 55, 40];
-    	
-    	// consulta um dataset customizado
-    	var ds = DatasetFactory.getDataset("ds_testeGraficos",null,null,null);
+    // fnViewGrafico: function() {
+    //     var modGraphic = document.getElementById('mdGraphicPerc');
+    //     modGraphic.style.display = 'block';
+    // },
 
-    	// criar um array vazio para receber os dados do dataset
-        var array_vazio = [];
-
-    	// popula o array 
-        for (x = 0; x < ds.values.length; x++){
-        	array_vazio[x] = ds.values[x].Valor;
-        }
-    	
-    	// verifica o valor do setado no combo 
-    	var tipoCombo = $("#cmbTipo").val();
-    	
-    	// se for selecionado valor "bar"
-    	if(tipoCombo == "bar"){
-    	 	
-    		// oculta o gráfico do tipo line
-    		$("#lineType").hide();
-    		
-    		// exibe o gráfico do tipo bar
-        	$("#barType").show();
-        	
-        	//definição dos dados utilizados para gerar o gráfico
-    		var data = {
-        		    //campos do gráfico
-    				labels: ["P", "M", "G"],
-    				// valores e formatações
-        		    datasets: [
-        		        {        		            
-        		            fillColor: "rgba(220,220,220,0.2)",
-        		            strokeColor: "rgba(220,220,220,1)",
-        		            pointColor: "rgba(220,220,220,1)",
-        		            pointStrokeColor: "#fff",
-        		            pointHighlightFill: "#fff",
-        		            pointHighlightStroke: "rgba(220,220,220,1)",
-        		            // passando um dataset customizado como valor de fonte para o gráfico
-        		            data: array_vazio 
-        		        },
-        		        {        		            
-        		            fillColor: "rgba(151,187,205,0.2)",
-        		            strokeColor: "rgba(151,187,205,1)",
-        		            pointColor: "rgba(151,187,205,1)",
-        		            pointStrokeColor: "#fff",
-        		            pointHighlightFill: "#fff",
-        		            pointHighlightStroke: "rgba(151,187,205,1)",
-        		            // passando um array fixo como valor de fonte para o gráfico
-        		            data: [280, 480, 940, 1900, 860, 727, 690]
-        		        }
-        		    ]
-        		};
-        	
-    		// criação do gráfico
-        	var chart = FLUIGC.chart('#barType', {
-        	    id: 'barNew',
-        	    width: '700',
-        	    height: '200',
-        	    // aqui poderão ser definidos outros options
-        	});
-        	
-        	// definição do dados utilizados e o tipo de gráfico
-        	var barChart = chart.bar(data, "");        	
-    	}
-    	
-    	//se for selecionado valor "bar"
-    	if(tipoCombo == "line"){
-    		
-    		//oculta gráfico de colunas
-    		$("#barType").hide();
-    		//oculta gráfico de 
-    	 	$("#lineType").show();
-    	 	
-    	  	//definição dos dados utilizados para gerar o gráfico
-    		var data = {
-    				labels: ["P", "M", "G"],
-    				// valores e formatações
-        		    datasets: [
-        		        {        		           
-        		            fillColor: "rgba(220,220,220,0.2)",
-        		            strokeColor: "rgba(220,220,220,1)",
-        		            pointColor: "rgba(220,220,220,1)",
-        		            pointStrokeColor: "#fff",
-        		            pointHighlightFill: "#fff",
-        		            pointHighlightStroke: "rgba(220,220,220,1)",
-        		            data: array_vazio 
-        		        },
-        		        {        		            
-        		            fillColor: "rgba(151,187,205,0.2)",
-        		            strokeColor: "rgba(151,187,205,1)",
-        		            pointColor: "rgba(151,187,205,1)",
-        		            pointStrokeColor: "#fff",
-        		            pointHighlightFill: "#fff",
-        		            pointHighlightStroke: "rgba(151,187,205,1)",
-        		            data: [280, 480, 940, 1900, 860, 727, 690]
-        		        }
-        		    ]
-        		};
-    		
-    		// criação do gráfico       	
-        	var chart = FLUIGC.chart('#lineType', {
-        	    id: 'lineNew',
-        	    width: '700',
-        	    height: '200',
-        	 // passando um array fixo como valor de fonte para o gráfico
-        	});
-        	
-        	// definição do dados utilizados e o tipo de gráfico
-        	var lineChart = chart.line(data, "");
-    	}
+    modal: function() {
+        console.log('CLIQUEI NO MODAL')
+        var myModal = FLUIGC.modal({
+            title: 'Graficos',
+            content: '<div id="MY_SELECTOR"></div>',
+            id: 'fluig-modalMit',
+            size: 'large',
+            actions: [{
+                'label': 'Fechar',
+                'autoClose': true
+            }]
+        }, function(err, data) {
+            if(err) {
+                // do error handling
+            } else {
+                
+                var data = [
+                    {
+                        value: 300,
+                        color:"#B0CC49",
+                        highlight: "rgb(176,204,73,0.5)",
+                        label: "P"
+                    },
+                    {
+                        value: 50,
+                        color: "#C67926",
+                        highlight: "rgb(198,121,38,0.5)",
+                        label: "M"
+                    },
+                    {
+                        value: 100,
+                        color: "#ED145B",
+                        highlight: "rgb(237,20,91,0.5)",
+                        label: "G"
+                    }
+                ]
+                var chart = FLUIGC.chart('#MY_SELECTOR', {
+                    id: 'set_an_id_for_my_chart',
+                    width: '700',
+                    height: '200',
+                    /* See the list of options */
+                });
+                // call the doughnut function
+                var doughnutChart = chart.doughnut(data, "");
+                doughnutChart.generateLegend();
+                
+            }
+        });
     },
 
-    fnViewGrafico: function() {
-        var modGraphic = document.getElementById('mdGraphicPerc');
-        modGraphic.style.display = 'block';
-    }
+    
     
 });
 
@@ -256,8 +193,9 @@ function fnCloseOk() {
 }
 
 // function fnGraphicDonuts(){
+//     console.log('ENTREI NA FUNÇÃO DONUTS')
 //     let ctx = document.getElementById("myChart");
-//     var canvas = document.getElementsByTagName('canvas')[0];
+//     // var canvas = document.getElementsByTagName('canvas')[0];
 
 //     var cores = new Array();
 //     cores[0] = 'red';
@@ -321,25 +259,25 @@ function fnCloseOk() {
 //     modGraphic.style.display = 'block';
 // }
 
-window.onclick = function (event) {
-    var modGraphic = document.getElementById('mdGraphicPerc');
-    var modal = document.getElementById('mdDocumMIT');
+// window.onclick = function (event) {
+//     var modGraphic = document.getElementById('mdGraphicPerc');
+//     var modal = document.getElementById('mdDocumMIT');
 
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-    if (event.target == modGraphic) {
-        modGraphic.style.display = 'none';
-    }
-}
+//     if (event.target == modal) {
+//         modal.style.display = 'none';
+//     }
+//     if (event.target == modGraphic) {
+//         modGraphic.style.display = 'none';
+//     }
+// }
 
 var spanGraphic = document.getElementsByClassName('close')[1];
 
-function fnCloseSpanGraphic() {
-    var modGraphic = document.getElementById('mdGraphicPerc');
+// function fnCloseSpanGraphic() {
+//     var modGraphic = document.getElementById('mdGraphicPerc');
 
-    modGraphic.style.display = 'none';
-}
+//     modGraphic.style.display = 'none';
+// }
 
 function calculoHoras(){
 

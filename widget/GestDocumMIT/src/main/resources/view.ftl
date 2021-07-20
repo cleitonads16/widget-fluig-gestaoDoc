@@ -36,7 +36,7 @@
                         <div class="divLoading" id="divLoading">
                             <table class="table table-striped table-bordered table-responsive" id="tnProjClient">
                                 <thead class="scroll-thead">
-                                    <tr>
+                                    <tr class="info">
                                         <th><b>Cod.Projeto</b></th>
                                         <th><b>Nome do Projeto</b></th>
                                         <th><b>Nome do Cliente</b></th>
@@ -128,7 +128,7 @@
                                         <div class="tabModal">
                                             <table id="tabelaModal" class="table table-striped table-bordered table-responsive">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="info">
                                                         <td><b>Sequ&ecirc;ncia</b></td>
                                                         <td><b>Documento</b></td>
                                                     </tr>
@@ -168,24 +168,21 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-esp" id="mdGraphicPerc">
+            <div id="div_teste">
+                <button type="button" id="btnTeste" class="btn btn-primary" data-testeGraf>Teste Gr&aacute;ficos</button>
+            </div>
+            <#--  <div class="modal-esp" id="mdGraphicPerc">
                 <div class="modal-dialog modal-dialog-centered" style="width: 1000px;">
                     <div class="modal-content modal-dialog-centered">
-                        <select type="button" class="btn btn-default" data-tipo_graph id="cmbTipo">
-                            <option value="line">Line</option> 	
-                            <option value="bar">Bar</option>
-                        </select>
-                        <div id="barType"></div>
-                        <div id="lineType"></div>
-                        <#--  <div class="modal-header">
+                        <div class="modal-header">
                             <span class="close" onclick="fnCloseSpanGraphic()">&times;</span>
                         </div>
                         <div class="modal-body">
                             <canvas id="myChart" height="90"></canvas>
-                        </div>  -->
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div>  -->
         </form>
     </div>
 </div>
