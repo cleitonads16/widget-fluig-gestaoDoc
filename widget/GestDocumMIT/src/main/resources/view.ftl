@@ -114,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-esp" id="mdDocumMIT">
+            <#--  <div class="modal-esp" id="mdDocumMIT">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content-esp modal-dialog-centered">
                         <div class="modal-header">
@@ -134,7 +134,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tbodyModal">
-                                                    <#--  <tr>
+                                                    <tr>
                                                         <td>1</td>
                                                         <td><button type="button" id="btLinkMIT" class="btn btn-link">MIT040 - Engenharia de Processo</button></td>
                                                     </tr>
@@ -153,7 +153,7 @@
                                                     <tr>
                                                         <td>5</td>
                                                         <td><button type="button" id="btLinkMIT" class="btn btn-link">MIT040 - Engenharia de Processo</button></td>
-                                                    </tr>  -->
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -167,10 +167,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="div_teste">
-                <button type="button" id="btnTeste" class="btn btn-primary" data-testeGraf>Teste Gr&aacute;ficos</button>
-            </div>
+            </div>  -->
             <#--  <div class="modal-esp" id="mdGraphicPerc">
                 <div class="modal-dialog modal-dialog-centered" style="width: 1000px;">
                     <div class="modal-content modal-dialog-centered">

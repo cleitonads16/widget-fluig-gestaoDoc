@@ -19,4 +19,5 @@ application.resource.js.3=/resources/js/bootstrap.min.js
 application.resource.css.4=/resources/css/GestDocumMIT.css
 application.resource.js.6=/resources/js/GestDocumMIT.js
 application.resource.js.7=/resources/js/vcXMLRPC.js
-application.resource.component.1=fluigchart
+application.resource.js.5=/resources/js/Chart.bundle.js
+

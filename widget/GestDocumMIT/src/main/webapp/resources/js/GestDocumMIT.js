@@ -11,8 +11,7 @@ var MyWidget = SuperWidget.extend({
         $('#nomCoord_'+this.instanceId).val(WCMAPI.getUser());
         $('#data_'+this.instanceId).val(data);
 
-        getArrayProject();
-        this.tabModal();
+        this.getArrayProject();
         
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
@@ -27,56 +26,82 @@ var MyWidget = SuperWidget.extend({
         
     },
 
-    
-  
     //BIND de eventos
     bindings: {
         local: {
             'testeGraf': ['click_grafcoDoughnut'],
-            'graficos': ['click_modal'],
-            'tipo_graph': ['click_fnGrafico']
+            'data-open-modal': ['click_modal'],
+            'tipo_graph': ['click_fnGrafico'],
+            'documento': ['click_tabModal']
         },
         global: {}
     },
 
+    // Modal Documentos
     tabModal: function (){
-
-        var html = "";
-    
-        $.ajax({ 
-            async : true, 
-            type : "GET", 
-            contentType: "application/json", 
-            url : '/api/public/ecm/document/listDocumentWithChildren/23146', 
-            success: function(retorno) {
-                $.each(retorno.content,function(k,v){ 
-                    var objeto = new Object(); objeto = v.children; 
-                    for(var x = 0; x < objeto.length; x++){ 
-                        
-                        html += "<tr>"+
-                                "<td>"+ x +"</td>" +
-                                '<td><button type="button" id="btLinkMITmodal" class="btn btn-link">'+ objeto[x].description +'</button></td>' +
-                                "</tr>";
-                    } 
-    
-                })
-
-                document.getElementById('tbodyModal').innerHTML = html;
-            } 
-        });
         
+        var myModal = FLUIGC.modal({
+            title: 'MIT',
+            content: '<div class="tabModal">'+
+                     '<table id="tabelaModal" class="table table-striped table-bordered table-responsive">'+
+                     '<thead>'+
+                     '<tr class="info">'+
+                     '<td><b>Sequ&ecirc;ncia</b></td>'+
+                     '<td><b>Documento</b></td>'+
+                     '</tr>'+
+                     '</thead>'+
+                     '<tbody id="tbodyModal"></tbody>'+
+                     '</table>'+
+                     '</div>',
+            id: 'fluig-modalMit',
+            size: 'large',
+            actions: [{
+                'label': 'Graficos',
+                'bind': 'data-open-modal',
+            },{
+                'label': 'Fechar',
+                'autoClose': true
+            }]
+        }, function(err, data) {
+            if(err) {
+                // do error handling
+            } else {
+                
+                var html = "";
+    
+                $.ajax({ 
+                    async : true, 
+                    type : "GET", 
+                    contentType: "application/json", 
+                    url : '/api/public/ecm/document/listDocumentWithChildren/23146', 
+                    success: function(retorno) {
+                        $.each(retorno.content,function(k,v){ 
+                            var objeto = new Object(); objeto = v.children; 
+                            for(var x = 0; x < objeto.length; x++){ 
+                                
+                                html += "<tr>"+
+                                        "<td>"+ x +"</td>" +
+                                        '<td><button type="button" id="btLinkMITmodal" class="btn btn-link">'+ objeto[x].description +'</button></td>' +
+                                        "</tr>";
+                            } 
+            
+                        })
+
+                        document.getElementById('tbodyModal').innerHTML = html;
+                    } 
+                });
+            }
+        });        
     },
 
-    // fnViewGrafico: function() {
-    //     var modGraphic = document.getElementById('mdGraphicPerc');
-    //     modGraphic.style.display = 'block';
-    // },
-
+    // Modal Graficos 
     modal: function() {
-        console.log('CLIQUEI NO MODAL')
+        console.log("CLIQUE NO MODAL GRAFICO")
         var myModal = FLUIGC.modal({
             title: 'Graficos',
-            content: '<div id="MY_SELECTOR"></div>',
+            content: '<div id="MY_SELECTOR">'+
+                     '<canvas id="set_an_id_for_my_chart"  width="700" height="200"></canvas>'+
+                     '</div>',
             id: 'fluig-modalMit',
             size: 'large',
             actions: [{
@@ -88,41 +113,81 @@ var MyWidget = SuperWidget.extend({
                 // do error handling
             } else {
                 
-                var data = [
-                    {
-                        value: 300,
-                        color:"#B0CC49",
-                        highlight: "rgb(176,204,73,0.5)",
-                        label: "P"
-                    },
-                    {
-                        value: 50,
-                        color: "#C67926",
-                        highlight: "rgb(198,121,38,0.5)",
-                        label: "M"
-                    },
-                    {
-                        value: 100,
-                        color: "#ED145B",
-                        highlight: "rgb(237,20,91,0.5)",
-                        label: "G"
-                    }
-                ]
-                var chart = FLUIGC.chart('#MY_SELECTOR', {
-                    id: 'set_an_id_for_my_chart',
-                    width: '700',
-                    height: '200',
-                    /* See the list of options */
-                });
-                // call the doughnut function
-                var doughnutChart = chart.doughnut(data, "");
-                doughnutChart.generateLegend();
+                var ctx = document.getElementById("set_an_id_for_my_chart");
+                var ds = DatasetFactory.getDataset("ds_testeGraficos",null,null,null);
+                var arrValores = [];
+                var arrLabels = [];
+                var arrCores = [];
+
+                //Cria cores aleatórias
+                var randomColorGenerator = function () { 
+                    return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
+                };
+
+                for (x = 0; x < ds.values.length; x++){
+                    arrValores[x] = ds.values[x].QUANTIDADE;
+                    arrLabels[x] = ds.values[x].MIT;
+                    arrCores[x] = randomColorGenerator();
+                }
                 
+                var dados = {
+                    datasets: [{
+                        data: arrValores,
+                        backgroundColor: arrCores
+                    }],
+                    labels: arrLabels
+                };
+
+                var opcoes = {
+                    cutoutPercentage: 70
+                };
+
+                var meuDonutChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: dados,
+                    options: opcoes
+                });
             }
         });
     },
 
+    //Tabela de dados principal
+    getArrayProject: function (){
+        console.log('FUNÇÃO TABELA PROJETOS');
+        var html = "";
+        var codCliente = "";
+        var nomCliente = "";
     
+        var c1 = DatasetFactory.createConstraint('codigo_cliente', '000002', '000002', ConstraintType.MUST);
+        var dsProjetosProtheus = DatasetFactory.getDataset('dsProjetosProtheus', null, new Array(c1), null);
+    
+        for (var i = 0; i < dsProjetosProtheus.values.length; i++){
+            var c1 = DatasetFactory.createConstraint('codigo', dsProjetosProtheus.values[i].codigo_cliente, dsProjetosProtheus.values[i].codigo_cliente, ConstraintType.MUST);
+            var c2 = DatasetFactory.createConstraint('loja', dsProjetosProtheus.values[i].loja, dsProjetosProtheus.values[i].loja, ConstraintType.MUST);
+            var dsClienteProtheus = DatasetFactory.getDataset('dsClienteProtheus', null, new Array(c1, c2), null);
+            
+    
+            if (dsClienteProtheus.values.length){
+                codCliente = dsClienteProtheus.values[0].codigo;
+                nomCliente = dsClienteProtheus.values[0].nome;
+            }
+    
+            html += "<tr>"+
+                "<td>" + dsProjetosProtheus.values[i].projeto+"</td>"+
+                "<td>" + dsProjetosProtheus.values[i].descricao+"</td>" +
+                "<td>"+nomCliente+"</td>" +
+                "<td>Nome do Responsável</td>" +
+                '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto +'"data-documento>MIT P</button></td>' +
+                "<td><input type='number' id='horasPrevistas' class='form-control'/></td>" +
+                "<td><input type='number' id='horasRalizadas' class='form-control'/></td>" +
+                "<td>Progresso</td>" +
+                "</tr>";
+            
+        }
+
+        document.getElementById("arrayProj").innerHTML = html;
+       
+    }
     
 });
 
@@ -134,63 +199,25 @@ function fnRefresh(){
     myLoading1.hide();
 }
 
-function getArrayProject(){
-    var html = "";
-    var codCliente = "";
-    var nomCliente = "";
-
-
-    // myLoading1.show();
-    //var c1 = DatasetFactory.createConstraint('projeto', 'OPV003', 'OPV003', ConstraintType.MUST);
-    //var dsProjetosProtheus = DatasetFactory.getDataset('dsProjetosProtheus', null, new Array(c1), null);
-
-    var c1 = DatasetFactory.createConstraint('codigo_cliente', '000002', '000002', ConstraintType.MUST);
-    var dsProjetosProtheus = DatasetFactory.getDataset('dsProjetosProtheus', null, new Array(c1), null);
-
-    for (var i = 0; i < dsProjetosProtheus.values.length; i++){
-        var c1 = DatasetFactory.createConstraint('codigo', dsProjetosProtheus.values[i].codigo_cliente, dsProjetosProtheus.values[i].codigo_cliente, ConstraintType.MUST);
-        var c2 = DatasetFactory.createConstraint('loja', dsProjetosProtheus.values[i].loja, dsProjetosProtheus.values[i].loja, ConstraintType.MUST);
-    	var dsClienteProtheus = DatasetFactory.getDataset('dsClienteProtheus', null, new Array(c1, c2), null);
-        
-
-        if (dsClienteProtheus.values.length){
-            codCliente = dsClienteProtheus.values[0].codigo;
-            nomCliente = dsClienteProtheus.values[0].nome;
-        }
-
-        html += "<tr>"+
-            "<td>" + dsProjetosProtheus.values[i].projeto+"</td>"+
-            "<td>" + dsProjetosProtheus.values[i].descricao+"</td>" +
-            "<td>"+nomCliente+"</td>" +
-            "<td>Nome do Responsável</td>" +
-            '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto+'" onclick="fnArrayMIT(this);calculoHoras()" data-documento>MIT P</button></td>' +
-            "<td><input type='number' id='horasPrevistas' class='form-control'/></td>" +
-            "<td><input type='number' id='horasRalizadas' class='form-control'/></td>" +
-            "<td>Progresso</td>" +
-            "</tr>";
-        
-    }
-    document.getElementById("arrayProj").innerHTML = html;
-   
-}
 
 
 
-function fnArrayMIT(campoID) {
-    var modal = document.getElementById('mdDocumMIT');
-    //alert(campoID.value);
-    modal.style.display = "block";
-}
 
-function fnCloseDocumMIT(){
-    var modal = document.getElementById('mdDocumMIT');
-    modal.style.display = "none";
-}
+// function fnArrayMIT(campoID) {
+//     var modal = document.getElementById('mdDocumMIT');
+//     //alert(campoID.value);
+//     modal.style.display = "block";
+// }
 
-function fnCloseOk() {
-    var modal = document.getElementById('mdDocumMIT');
-    modal.style.display = "none";
-}
+// function fnCloseDocumMIT(){
+//     var modal = document.getElementById('mdDocumMIT');
+//     modal.style.display = "none";
+// }
+
+// function fnCloseOk() {
+//     var modal = document.getElementById('mdDocumMIT');
+//     modal.style.display = "none";
+// }
 
 // function fnGraphicDonuts(){
 //     console.log('ENTREI NA FUNÇÃO DONUTS')
@@ -271,7 +298,7 @@ function fnCloseOk() {
 //     }
 // }
 
-var spanGraphic = document.getElementsByClassName('close')[1];
+// var spanGraphic = document.getElementsByClassName('close')[1];
 
 // function fnCloseSpanGraphic() {
 //     var modGraphic = document.getElementById('mdGraphicPerc');
