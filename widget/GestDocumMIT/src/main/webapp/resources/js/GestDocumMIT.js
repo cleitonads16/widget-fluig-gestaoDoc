@@ -1,4 +1,3 @@
-
 var MyWidget = SuperWidget.extend({
     //variáveis da widget
     variavelNumerica: null,
@@ -12,7 +11,8 @@ var MyWidget = SuperWidget.extend({
         $('#data_'+this.instanceId).val(data);
 
         this.getArrayProject();
-        
+        this.carregar();
+
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
         $('#campFiltro').keyup(function() {
@@ -22,24 +22,24 @@ var MyWidget = SuperWidget.extend({
                 var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
                 return !~text.indexOf(val);
             }).hide();
-        });
-        
+        });       
     },
 
     //BIND de eventos
     bindings: {
         local: {
-            'testeGraf': ['click_grafcoDoughnut'],
-            'data-open-modal': ['click_modal'],
-            'tipo_graph': ['click_fnGrafico'],
-            'documento': ['click_tabModal']
+            'horas': ['blur_calculoHoras','blur_salvar'],
+            'refresh': ['click_fnRefresh'],
+            'documento': ['click_tabModal'],
         },
-        global: {}
+        global: {
+            'open-modal': ['click_modal'],
+        }
     },
 
     // Modal Documentos
     tabModal: function (){
-        
+
         var myModal = FLUIGC.modal({
             title: 'MIT',
             content: '<div class="tabModal">'+
@@ -56,7 +56,7 @@ var MyWidget = SuperWidget.extend({
             id: 'fluig-modalMit',
             size: 'large',
             actions: [{
-                'label': 'Graficos',
+                'label': 'Gráficos',
                 'bind': 'data-open-modal',
             },{
                 'label': 'Fechar',
@@ -96,13 +96,13 @@ var MyWidget = SuperWidget.extend({
 
     // Modal Graficos 
     modal: function() {
-        console.log("CLIQUE NO MODAL GRAFICO")
+        
         var myModal = FLUIGC.modal({
-            title: 'Graficos',
+            title: 'Gráficos',
             content: '<div id="MY_SELECTOR">'+
                      '<canvas id="set_an_id_for_my_chart"  width="700" height="200"></canvas>'+
                      '</div>',
-            id: 'fluig-modalMit',
+            id: 'fluig-modal',
             size: 'large',
             actions: [{
                 'label': 'Fechar',
@@ -153,7 +153,7 @@ var MyWidget = SuperWidget.extend({
 
     //Tabela de dados principal
     getArrayProject: function (){
-        console.log('FUNÇÃO TABELA PROJETOS');
+        
         var html = "";
         var codCliente = "";
         var nomCliente = "";
@@ -178,8 +178,8 @@ var MyWidget = SuperWidget.extend({
                 "<td>"+nomCliente+"</td>" +
                 "<td>Nome do Responsável</td>" +
                 '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto +'"data-documento>MIT P</button></td>' +
-                "<td><input type='number' id='horasPrevistas' class='form-control'/></td>" +
-                "<td><input type='number' id='horasRalizadas' class='form-control'/></td>" +
+                "<td><input type='number' id='horasPrevistas' class='form-control'data-horas/></td>" +
+                "<td><input type='number' id='horasRalizadas' class='form-control'data-horas/></td>" +
                 "<td>Progresso</td>" +
                 "</tr>";
             
@@ -187,137 +187,43 @@ var MyWidget = SuperWidget.extend({
 
         document.getElementById("arrayProj").innerHTML = html;
        
-    }
+    },
     
+    fnRefresh: function (){
+        console.log('REFRESH')
+        var myLoading1 = FLUIGC.loading('#tnProjClient');
+        myLoading1.show();
+        myLoading1.hide();
+    },
+
+    calculoHoras: function (){
+
+        var num1 = $("#horasPrevistas").val();
+        num1 = parseInt(num1);
+        var num2 = $("#horasRalizadas").val();;
+        num2 = parseInt(num2);
+    
+        var sub  = num1-num2;
+
+        console.log('SUB: ' + sub)
+    
+    },
+
+    salvar: function(){
+        console.log('SALVEI');
+        localStorage.setItem("horasPrevistas",document.getElementById("horasPrevistas").value);
+        localStorage.setItem("horasRalizadas",document.getElementById("horasRalizadas").value);
+
+    },
+
+    carregar: function(){
+
+        document.getElementById("horasPrevistas").value = localStorage.getItem("horasPrevistas");
+        document.getElementById("horasRalizadas").value = localStorage.getItem("horasRalizadas");
+        
+     }
 });
 
 
-function fnRefresh(){
-    console.log('REFRESH')
-    var myLoading1 = FLUIGC.loading('#divLoading');
-    myLoading1.show();
-    myLoading1.hide();
-}
-
-
-
-
-
-// function fnArrayMIT(campoID) {
-//     var modal = document.getElementById('mdDocumMIT');
-//     //alert(campoID.value);
-//     modal.style.display = "block";
-// }
-
-// function fnCloseDocumMIT(){
-//     var modal = document.getElementById('mdDocumMIT');
-//     modal.style.display = "none";
-// }
-
-// function fnCloseOk() {
-//     var modal = document.getElementById('mdDocumMIT');
-//     modal.style.display = "none";
-// }
-
-// function fnGraphicDonuts(){
-//     console.log('ENTREI NA FUNÇÃO DONUTS')
-//     let ctx = document.getElementById("myChart");
-//     // var canvas = document.getElementsByTagName('canvas')[0];
-
-//     var cores = new Array();
-//     cores[0] = 'red';
-//     cores[1] = 'yellow';
-//     cores[2] = 'blue';
-//     cores[3] = 'white';
-//     cores[4] = 'black';
-//     cores[5] = 'navy';
-//     cores[6] = 'beige';
-//     cores[7] = 'gray';
-//     cores[8] = 'gold';
-//     cores[9] = 'orange';
-//     cores[10] = 'brown';
-//     cores[11] = 'silver';
-//     cores[12] = 'pink';
-//     cores[13] = 'purple';
-//     cores[14] = 'green';
-//     cores[15] = 'violet';
-
-//     var projetos = new Array();
-//     projetos[0] = 'red';
-//     projetos[1] = 'yellow';
-//     projetos[2] = 'blue';
-//     projetos[3] = 'white';
-//     projetos[4] = 'black';
-//     projetos[5] = 'navy';
-//     projetos[6] = 'beige';
-//     projetos[7] = 'gray';
-//     projetos[8] = 'gold';
-//     projetos[9] = 'orage';
-//     projetos[10] = 'brown';
-//     projetos[11] = 'silver';
-//     projetos[12] = 'pink';
-//     projetos[13] = 'purple';
-//     projetos[14] = 'green';
-//     projetos[15] = 'violet';
-
-//     let dados = {
-//         datasets: [{
-//             data: [10,15,5,8,10,20,28,5,5,5,3,3,2,10,10,10],
-//             backgroundColor: cores
-//         }],
-//         labels: projetos
-//     };
-
-//     let opcoes = {
-//         cutoutPercentage: 70
-//     };
-
-//     let meuDonutChart = new Chart(ctx, {
-//         type: 'doughnut',
-//         data: dados,
-//         options: opcoes
-//     });
-// }
-
-// function fnGraphic() {
-//     var modGraphic = document.getElementById('mdGraphicPerc');
-
-//     fnGraphicDonuts();
-//     modGraphic.style.display = 'block';
-// }
-
-// window.onclick = function (event) {
-//     var modGraphic = document.getElementById('mdGraphicPerc');
-//     var modal = document.getElementById('mdDocumMIT');
-
-//     if (event.target == modal) {
-//         modal.style.display = 'none';
-//     }
-//     if (event.target == modGraphic) {
-//         modGraphic.style.display = 'none';
-//     }
-// }
-
-// var spanGraphic = document.getElementsByClassName('close')[1];
-
-// function fnCloseSpanGraphic() {
-//     var modGraphic = document.getElementById('mdGraphicPerc');
-
-//     modGraphic.style.display = 'none';
-// }
-
-function calculoHoras(){
-
-    var num1 = $("#horasPrevistas").val();
-    num1 = parseInt(num1);
-
-    var num2 = $("#horasRalizadas").val();;
-    num2 = parseInt(num2);
-
-    var sub  = num1-num2;
-
-    console.log('SUB: ' + sub)
-
-}
 
 

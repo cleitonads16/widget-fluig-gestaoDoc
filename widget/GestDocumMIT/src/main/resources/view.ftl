@@ -29,7 +29,7 @@
                         </div>  -->
                         <div class="btnAtualizar" style="width: -5px">
                             <#--  <button type="button" id="btBusca" class="btn btn-default">Buscar</button>  -->
-                            <button type="button" id="btRefresh" onclick="fnRefresh();" class="btn btn-default">Atualizar</button>
+                            <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
                         </div>
                     </div><br>
                     <div class="row">
