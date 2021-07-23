@@ -11,7 +11,6 @@ var MyWidget = SuperWidget.extend({
         $('#data_'+this.instanceId).val(data);
 
         this.getArrayProject();
-        this.carregar();
 
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
@@ -28,12 +27,13 @@ var MyWidget = SuperWidget.extend({
     //BIND de eventos
     bindings: {
         local: {
-            'horas': ['blur_calculoHoras','blur_salvar'],
+            'horas': ['blur_calculoHoras'],
             'refresh': ['click_fnRefresh'],
             'documento': ['click_tabModal'],
         },
         global: {
             'open-modal': ['click_modal'],
+            'visualizarDoc': ['click_visualizar']
         }
     },
 
@@ -42,7 +42,7 @@ var MyWidget = SuperWidget.extend({
 
         var myModal = FLUIGC.modal({
             title: 'MIT',
-            content: '<div class="tabModal">'+
+            content: '<div class="tabModal" id="tabModal">'+
                      '<table id="tabelaModal" class="table table-striped table-bordered table-responsive">'+
                      '<thead>'+
                      '<tr class="info">'+
@@ -81,7 +81,7 @@ var MyWidget = SuperWidget.extend({
                                 
                                 html += "<tr>"+
                                         "<td>"+ x +"</td>" +
-                                        '<td><button type="button" id="btLinkMITmodal" class="btn btn-link">'+ objeto[x].description +'</button></td>' +
+                                        '<td><button type="button" class="btn btn-link" data-visualizarDoc>'+ objeto[x].description +'</button></td>' +
                                         "</tr>";
                             } 
             
@@ -92,6 +92,33 @@ var MyWidget = SuperWidget.extend({
                 });
             }
         });        
+    },
+
+    //Visualizacao de documentos
+    visualizar: function(){
+        
+        var modal = document.getElementById("tabModal")
+            var docId = "23149"
+            var docVersion = "1000"
+            var parentOBJ;
+
+            if (modal.opener) {
+                parentOBJ = modal.opener.parent;
+            } else {
+                parentOBJ = parent;
+            }
+        
+            var cfg = {
+                url : "/ecm_documentview/documentView.ftl",
+                maximized : true,
+                title : "Visualizador de Documentos",
+                callBack : function() {
+                    parentOBJ.ECM.documentView.getDocument(docId, docVersion);
+                },
+                customButtons : []
+            };
+
+            parentOBJ.WCMC.panel(cfg);
     },
 
     // Modal Graficos 
@@ -151,6 +178,53 @@ var MyWidget = SuperWidget.extend({
         });
     },
 
+    // Modal Visualizar documentos
+    /*modalVisuDoc: function (){
+        console.log('CLIQUEI EM VISUALIZAR DOC')
+        var myModalVisuDoc = FLUIGC.modal({
+            title: 'Visualizar Documento',
+            content: '<div id="divContratoAss" class="row">'+
+                     '<div id="divContratoAss" class="panel panel-primary">'+
+                     '<div class="panel-heading">'+
+                     '<h3><b><i class="fluigicon fluigicon-file-approval icon-md"></i>MIT</b>'+
+                     '</h3>'+
+                     '</div>'+
+                     '<div class="panel-body">'+
+                     '<div class="row">'+
+                     '<div class="col-xs-5 col-sm-3">'+
+                     '<button type="button" class="btn btn-primary" id="contratoTotvsSign">'+
+                     '<i class="fluigicon fluigicon-download icon-xl"></i>'+
+                     '</button>'+
+                     '</div>'+
+                     '</div>'+
+                     '<br>'+
+                     '<div class="row">'+
+                     '<div class="col-xs-12 col-sm-12">'+
+                     '<iframe id="downPDF" height="500px" class="col-xs-12 col-sm-12"></iframe>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>',
+            id: 'fluig-modalVisuDoc',
+            size: 'large',
+            actions: [/*{
+                'label': 'Salvar',
+                'bind': 'data-open-modalVisuDoc',
+            },{
+                'label': 'Fechar',
+                'autoClose': true
+            }]
+        }, function(err, data) {
+            if(err) {
+                // do error handling
+            } else {
+                
+                
+            }
+        });        
+    },*/
+
     //Tabela de dados principal
     getArrayProject: function (){
         
@@ -177,9 +251,9 @@ var MyWidget = SuperWidget.extend({
                 "<td>" + dsProjetosProtheus.values[i].descricao+"</td>" +
                 "<td>"+nomCliente+"</td>" +
                 "<td>Nome do Responsável</td>" +
-                '<td><button type="button" id="btLinkMIT" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto +'"data-documento>MIT P</button></td>' +
-                "<td><input type='number' id='horasPrevistas' class='form-control'data-horas/></td>" +
-                "<td><input type='number' id='horasRalizadas' class='form-control'data-horas/></td>" +
+                '<td><button type="button" class="btn btn-link" value="' + dsProjetosProtheus.values[i].projeto +'"data-documento>MIT P</button></td>' +
+                "<td><input type='number' class='form-control horasPrevistas'data-horas/></td>" +
+                "<td><input type='number' class='form-control horasRalizadas'data-horas/></td>" +
                 "<td>Progresso</td>" +
                 "</tr>";
             
@@ -198,9 +272,9 @@ var MyWidget = SuperWidget.extend({
 
     calculoHoras: function (){
 
-        var num1 = $("#horasPrevistas").val();
+        var num1 = $(".horasPrevistas").val();
         num1 = parseInt(num1);
-        var num2 = $("#horasRalizadas").val();;
+        var num2 = $(".horasRalizadas").val();;
         num2 = parseInt(num2);
     
         var sub  = num1-num2;
@@ -209,19 +283,21 @@ var MyWidget = SuperWidget.extend({
     
     },
 
-    salvar: function(){
-        console.log('SALVEI');
-        localStorage.setItem("horasPrevistas",document.getElementById("horasPrevistas").value);
-        localStorage.setItem("horasRalizadas",document.getElementById("horasRalizadas").value);
+    // salvar: function(){
+    //     console.log('SALVEI');
+    //     localStorage.setItem("horasPrevistas",document.getElementById("horasPrevistas").value);
+    //     localStorage.setItem("horasRalizadas",document.getElementById("horasRalizadas").value);
 
-    },
+    // },
 
-    carregar: function(){
+    // carregar: function(){
 
-        document.getElementById("horasPrevistas").value = localStorage.getItem("horasPrevistas");
-        document.getElementById("horasRalizadas").value = localStorage.getItem("horasRalizadas");
+    //     document.getElementById("horasPrevistas").value = localStorage.getItem("horasPrevistas");
+    //     document.getElementById("horasRalizadas").value = localStorage.getItem("horasRalizadas");
         
-     }
+    //  },
+
+    
 });
 
 
