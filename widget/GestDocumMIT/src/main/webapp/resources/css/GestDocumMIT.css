@@ -5,7 +5,7 @@ body {
 
 .divLoading,
 .tabModal {
-    height    : 350px;
+    height    : auto;
     overflow-y: auto;
     width     : 100%;
     border    : 5px solid white;

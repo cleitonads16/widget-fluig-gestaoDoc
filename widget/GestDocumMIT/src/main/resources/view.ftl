@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-md-11">
                             <div class="form-group has-feedback">
-                                <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Digite Para Filtrar...">
+                                <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Digite o dado da tabela que deseja filtrar">
                                 <i class="fluigicon fluigicon-search form-control-feedback"></i>
                             </div>
                         </div>
