@@ -17,14 +17,16 @@
                         </div>
                     </div><br>
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-3" style="width: -5px">
+                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar</button>
+                            <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>
+                            <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
+                        </div>
+                        <div class="col-md-9">
                             <div class="form-group has-feedback">
                                 <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Digite o dado da tabela que deseja filtrar">
                                 <i class="fluigicon fluigicon-search form-control-feedback"></i>
                             </div>
-                        </div>
-                        <div class="btnAtualizar" style="width: -5px">
-                            <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
                         </div>
                     </div><br>
                     <div class="row">
@@ -32,14 +34,12 @@
                             <table class="table table-striped table-bordered table-responsive" id="tnProjClient">
                                 <thead class="scroll-thead">
                                     <tr class="info">
-                                        <th><b>Cod.Projeto</b></th>
+                                        <td><b><input type="checkbox" id="lblPrinc" data-checkboxTb></b></td>
+                                        <th><b>Cliente</b></th>
+                                        <th><b>Código Projeto</b></th>
                                         <th><b>Nome do Projeto</b></th>
-                                        <th><b>Nome do Cliente</b></th>
                                         <th><b>Respons&aacute;vel</b></th>
-                                        <th><b>Documento</b></th>
-                                        <th><b>Horas Previstas</b></th>
-                                        <th><b>Horas Realizadas</b></th>
-                                        <th><b>Progresso</b></th>
+                                        <th><b>Status</b></th>
                                     </tr>
                                 </thead>
                                 <tbody id="arrayProj" class="scroll-tbody-y table-body">
@@ -106,6 +106,23 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <#--  <div id=teste>
+                            <table class="table" id="tbTeste">
+                                <thead>
+                                    <tr class="info">
+                                        <td><b><input type="checkbox" id="testeId"></b></td>
+                                        <th><b>Cliente</b></th>
+                                        <th><b>Código Projeto</b></th>
+                                        <th><b>Nome do Projeto</b></th>
+                                        <th><b>Respons&aacute;vel</b></th>
+                                        <th><b>Status</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTeste"></tbody>
+                            </table>
+                        </div>  -->
+
                     </div>
                 </div>
             </div>

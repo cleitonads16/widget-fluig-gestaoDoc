@@ -11,6 +11,8 @@ var MyWidget = SuperWidget.extend({
         $('#data_'+this.instanceId).val(data);
 
         this.getArrayProject();
+        // this.tabela();
+    
 
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
@@ -27,15 +29,135 @@ var MyWidget = SuperWidget.extend({
     //BIND de eventos
     bindings: {
         local: {
-            'horas': ['blur_calculoHoras'],
-            'refresh': ['click_fnRefresh'],
-            'documento': ['click_tabModal'],
-            // 'testEditForm': ['click_editarForm']
+            'refresh'   : ['click_fnRefresh','click_getArrayProject'],
+            'documento' : ['click_tabModal'],
+            'adicionar' : ['click_incluirMit'],
+            'checkboxTb': ['click_fnSelectAll'],
+            'excluir'   : ['click_fnDel']
         },
         global: {
-            'open-modal': ['click_modal'],
-            'visualizarDoc': ['click_visualizar']
+            'open-modal'   : ['click_modal'],
+            'visualizarDoc': ['click_visualizar'],
+            'cadastrar-MIT': ['click_setIncMIT','click_getEmpty']
         }
+    },
+
+     // Modal Incluir MIT
+     incluirMit: function (){
+
+        var myModalCadastrarMit = FLUIGC.modal({
+            title: 'Incluir MIT',
+            content: '<div class="tabModal" id="tabModal">'+
+                     '<div class="panel panel-info">'+
+                     '<div class="panel-body">'+
+                     '<div class="row">'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="cod_client">C&oacute;digo do Cliente:</label>'+
+                     '<input type="text" id="cod_client" name="cod_client" class="form-control">'+
+                     '</div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_client">Nome do Cliente:</label>'+
+                     '<input type="text" id="nm_client" name="nm_client" class="form-control">'+
+                     '</div>'+
+                     '<div class="clearfix visible-xs-block"></div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="projeto">C&oacute;digo do Projeto:</label>'+
+                     '<input type="text" id="projeto" name="projeto" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="row">'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_projeto">Nome do Projeto:</label>'+
+                     '<input type="text" id="nm_projeto" name="nm_projeto" class="form-control">'+
+                     '</div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_responsavel">Respons&aacute;vel:</label>'+
+                     '<input type="text" id="nm_responsavel" name="nm_responsavel" class="form-control">'+
+                     '</div>'+
+                     '<div class="clearfix visible-xs-block"></div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="emailCliente">E-Mail do Cliente:</label>'+
+                     '<input type="email" id="emailCliente" name="emailCliente" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="row">'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="loja">Loja:</label>'+
+                     '<input type="text" id="loja" name="loja" class="form-control">'+
+                     '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label class="control-label" style="margin-bottom: 10px;">Selecione o tipo de projeto:</label>'+
+                     '<div class="div_margin">'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto" id="tipoProjetoP" value="P" data-P>P'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto" id="tipoProjetoM" value="M" data-M>M'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto" id="tipoProjetoG" value="G" data-G>G'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto" id="tipoProjetoMIT" value="MIT" data-MIT>MIT'+
+                     '</label>'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="clearfix visible-xs-block"></div>'+
+                     '<div id="devControlMIT" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4" style="display: none;">'+
+                     '<label for="controlMIT">MIT:</label>'+
+                     '<input type="text" id="controlMIT" name="controlMIT" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="row">'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
+                     '<input type="text" id="codMatricula" name="codMatricula" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+       
+                     '</div>',
+            id: 'fluig-modaCadastrarMit',
+            size: 'large',
+            actions: [{
+                'label': 'Cadastrar MIT',
+                'bind': 'data-cadastrar-MIT',
+                'autoClose': true
+            },{
+                'label': 'Fechar',
+                'autoClose': true
+            }]
+        }, function(err, data) {
+            if(err) {
+                // do error handling
+            } else {
+            
+                var dataset = DatasetFactory.getDataset('formControleMits');
+                var users = dataset.values;
+     
+                var settingsExampleDataset = {
+                    source: users,
+                    displayKey: 'codMatricula',
+                    multiSelect: false,
+                    style: {
+                        autocompleteTagClass: 'tag-gray',
+                        tableSelectedLineClass: 'info'
+                    },
+                    table: {
+                        header: [{
+                            'title': 'Matrícula',
+                            'size': 'col-md-4',
+                            'dataorder': 'matricula',
+                            'standard': true
+                        }],
+                        renderContent: ['codMatricula']
+                    }
+                };
+            
+                var filter = FLUIGC.filter('#codMatricula', settingsExampleDataset);
+
+            }
+        });        
     },
 
     // Modal Documentos
@@ -229,62 +351,76 @@ var MyWidget = SuperWidget.extend({
     //Tabela de dados principal
     getArrayProject: function (){
         
-        var html = "";
-        var ds = DatasetFactory.getDataset('ds_controleMits', null, null, null);
-    
+        // var html = "";
+        var ds = DatasetFactory.getDataset('FormControleMits', null, null, null);
+        var arr = [];
+
         for (var i = 0; i < ds.values.length; i++){
             
-            var id = ds.values[i]['metadata#id'];
-            var codCliente = ds.values[i]['cod_client'];
+            var docId = ds.values[i]['documentid'];
+            var codClient = ds.values[i]['cod_client'];
+            var codProjeto = ds.values[i]['projeto'];
             var nomeProjeto = ds.values[i]['nm_projeto'];
-            var nomeCliente = ds.values[i]['nm_client'];
             var nomeResponsavel = ds.values[i]['nm_responsavel'];
-            var documento = ds.values[i]['controlMIT'];
-            var horasPrevistas = ds.values[i]['hr_previstas'];
-            var horasRealizadas = ds.values[i]['hr_realizadas'];
-            var progresso = ds.values[i]['progresso'];
-    
-            html += "<tr>"+
-                "<td>" + codCliente +"</td>"+
-                "<td>" + nomeProjeto +"</td>" +
-                "<td>" + nomeCliente +"</td>" +
-                "<td>" + nomeResponsavel +"</td>" +
-                '<td><button type="button" class="btn btn-link" data-documento>' + documento +'</button></td>' +
-                "<td><input type='number' class='form-control horasPrevistas'data-horas value='"+ horasPrevistas +"'/></td>" +
-                "<td><input type='number' class='form-control horasRalizadas'data-horas value='"+ horasRealizadas +"'/></td>" +
-                "<td><button type='button' class='btn btn-link testeEditar' data-testEditForm>" + progresso + " <input type='hidden' class='id"+i+"' value='"+ id +"'</td>" +
+            var status = 'Ativo'
+            // var status = ds.values[i]['controlMIT'];
+
+            // Insere dados em nova array
+            arr.push({
+
+                cliente: codClient,
+                projeto: codProjeto,
+                nProjeto: nomeProjeto,
+                responsavel: nomeResponsavel,
+                stausProjeto: status
+            })
+
+            //Filtrando os dados repetidos
+            arr = arr.filter(function (a) {
+                return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
+            }, Object.create(null))
+
+            // Mapeia os dados filtrados e insere em tabela
+            var tabMap = arr.map(function(item, indice){
+
+                var c1 = item.cliente;
+                var c2 = item.projeto;
+                var c3 = item.nProjeto;
+                var c4 = item.responsavel;
+                var c5 = item.stausProjeto;
+
+                var html = "";
+
+                html += "<tr>"+
+                '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
+                "<td>" + c1 +"</td>"+
+                "<td>" + c2 +"</td>" +
+                "<td><button type='button' class='btn btn-link' data-documento>" + c3 +"</td>" +
+                "<td>" + c4 +"</td>" +
+                '<td>' + c5 +'</button></td>' +
                 "</tr>";
 
-            // caLcula a porcentagem
-            parseInt(horasPrevistas)
-            parseInt(horasRealizadas)
+                return html 
+    
+            });
 
-            var perc = "";
+                // console.log("TESTE TABELA:  "+ tabMap)
 
-            if (isNaN(horasRealizadas) || isNaN(horasPrevistas)) {
-                    perc = " ";
-                } else {
-                    perc =  (horasRealizadas/horasPrevistas) * 100;
-                    parseFloat(perc);
-                }
-                    
-                var n = perc.toFixed(1);
-                if(isNaN(n)){
-                    n = "";
-                }else{
-                        console.log('Progresso: ' + n.replace(".", ",") + '%');
-                }
-
-                    
+            // html += "<tr class='tr'>"+
+            //     '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
+            //     "<td class='td'>" + codClient +"</td>"+
+            //     "<td class='td'>" + codProjeto +"</td>" +
+            //     "<td class='td'><button type='button' class='btn btn-link' data-documento>" + nomeProjeto +"</td>" +
+            //     "<td class='td'>" + nomeResponsavel +"</td>" +
+            //     '<td class="td">' + status +'</button></td>' +
+            //     "</tr>";
             
+                
         }
 
-        document.getElementById("arrayProj").innerHTML = html; 
+
+        document.getElementById("arrayProj").innerHTML = tabMap.join('');
         
-        $(".testeEditar").click(function(){
-            console.log($('.id2').val())
-        })
-       
     },
     
     fnRefresh: function (){
@@ -294,62 +430,245 @@ var MyWidget = SuperWidget.extend({
         myLoading1.hide();
     },
 
-    calculoHoras: function (){
+    getEmpty: function() {
 
-        var campo1 = parseInt($('.horasPrevistas').val());
-        var campo2 = parseInt($('.horasRalizadas').val());
-        var perc = "";
-
-        if (isNaN(campo1) || isNaN(campo2)) {
-            perc = " ";
-        } else {
-            perc =  (campo2/campo1) * 100;
-            parseFloat(perc);
-        } 
-            
-        var n = perc.toFixed(1);
-            
-        // $('#campo3').val(n.replace(".", ",") + '%');
-   
-        console.log('Progresso: ' + n.replace(".", ",") + '%')
+        document.getElementById('cod_client').value = "";
+        document.getElementById('nm_client').value = "";
+        document.getElementById('projeto').value = "";
+        document.getElementById('nm_projeto').value = "";
+        document.getElementById('nm_responsavel').value = "";
+        document.getElementById('emailCliente').value = "";
+        document.getElementById('loja').value = "";
+        document.getElementById('tipoProjetoP').checked = true;
+        document.getElementById('controlMIT').value = "";
     
+        // document.getElementById('emailTotvsSign').value = "";
+        // document.getElementById('nomeTotvsSign').value = "";
+        // document.getElementById('cpfTotvsSign').value = "";
+        // document.getElementById('telTotvsSign').value = "";
+        // document.getElementById('posTotvsSign').value = "";
+        // document.getElementById('codDocumID').value = "";
     },
 
-    // editarForm: function(){
-
-    //     console.log('CLIQUEI EM EDITAR FORM')
-    //     var dataset = DatasetFactory.getDataset('ds_controleMits', null, null, null);
-
-    //     for (var i = 0; i < dataset.values.length; i++){
-          
-    //         var id = dataset.values[i]['metadata#id'];
-    //         var versao = dataset.values[i]['metadata#version'];
-
-    //     }
-
-    //     var modal = document.getElementById("divLoading")
-    //     var docId = "204133"
-    //     var docVersion = "1000"
-    //     var parentOBJ;
-
-    //     if (modal.opener) {
-    //         parentOBJ = modal.opener.parent;
-    //     } else {
-    //         parentOBJ = parent;
-    //     }
+    setIncMIT: function(){
+        
+        var mitDocum = "";
+        var mitP = new Array();
+        mitP[0] = "MIT032 - CRONOGRAMA DO PROJETO";
+        mitP[1] = "MIT005 - ATA DE REUNIAO";
+        mitP[2] = "MIT041 - ESPECIFICACAO DE PROCESSOS";
+        mitP[3] = "MIT008 - STATUS REPORT";
+        mitP[4] = "MIT010 - VALIDACAO DE PROCESSOS";
+        mitP[5] = "MIT062 - CERTIFICADO DE CONCLUSÃO";
     
-    //     var cfg = {
-    //         url : "/ecm_documentview/documentView.ftl",
-    //         maximized : true,
-    //         title : "Visualizador de Documentos",
-    //         callBack : function() {
-    //             parentOBJ.ECM.documentView.getDocument(docId, docVersion);
-    //         },
-    //         customButtons : []
-    //     };
+        var mitM = new Array();
+        mitM[0] = "MIT032 - CRONOGRAMA DO PROJETO";
+        mitM[1] = "MIT021 - TERMO DE ABERTURA";
+        mitM[2] = "MIT005 - ATA DE REUNIAO";
+        mitM[3] = "MIT025 - CHECK LIST SIZING";
+        mitM[4] = "MIT041 - ESPECIFICACAO DE PROCESSOS";
+        mitM[5] = "MIT042 - FLUXOGRAMA DO PROCESSO";
+        mitM[6] = "MIT008 - STATUS REPORT";
+        mitM[7] = "MIT010 - VALIDACAO DE PROCESSOS";
+        mitM[8] = "MIT061 - AUTORIZAÇÃO PARA GO LIVE";
+        mitM[9] = "MIT046 - ANALISE DE GAP";
+        mitM[10] = "MIT044 - ESPECIFICACAO DE PERSONALIZACAO";
+    
+        var mitG = new Array();
+        mitG[0] = "MIT032 - CRONOGRAMA DO PROJETO";
+        mitG[1] = "MIT021 - TERMO DE ABERTURA";
+        mitG[2] = "MIT024 - APRESENTACAO ABERTURA DO PROJETO";
+        mitG[3] = "MIT025 - CHECK LIST SIZING";
+        mitG[4] = "MIT034 - MATRIZ DE RESPONSABILIDADE";
+        mitG[5] = "MIT035 - MATRIZ DE COMUNICACAO";
+        mitG[6] = "MIT036 - MATRIZ DE RISCOS";
+        mitG[7] = "MIT041 - ESPECIFICACAO DE PROCESSOS";
+        mitG[8] = "MIT042 - FLUXOGRAMA DO PROCESSO";
+        mitG[9] = "MIT046 - ANALISE DE GAP";
+        mitG[10] = "MIT005 - ATA DE REUNIAO";
+        mitG[11] = "MIT008 - STATUS REPORT";
+        mitG[12] = "MIT043 - ESPECIFICACAO DE PARAMETRIZACAO";
+        mitG[13] = "MIT044 - ESPECIFICACAO DE PERSONALIZACAO";
+        mitG[14] = "MIT010 - VALIDACAO DE PROCESSOS";
+        mitG[15] = "MIT006 - LISTA DE TAREFAS E PENDENCIAS";
+        mitG[16] = "MIT037 - PLANO DE TREINAMENTO";
+        mitG[17] = "MIT038 - ESTRATÉGIA DE CONVERSÃO";
+        mitG[18] = "MIT045 - ROTEIRO DE TESTES";
+        mitG[19] = "MIT061 - AUTORIZAÇÃO PARA GO LIVE";
+        mitG[20] = "MIT062 - CERTIFICADO DE CONCLUSÃO";
+    
+        var qtProjeto = 0;
+        var tipo = "";
+        if (document.getElementById('tipoProjetoP').checked == true) {
+            qtProjeto = mitP.length;
+            tipo = "P";
+        }
+        else if (document.getElementById('tipoProjetoM').checked == true) {
+            qtProjeto = mitM.length;
+            tipo = "M";
+        }
+        else if (document.getElementById('tipoProjetoG').checked == true) {
+            qtProjeto = mitG.length;
+            tipo = "G";
+        }
+        else {
+            qtProjeto = 1;
+            tipo = "MIT";
+        }
+    
+        for (var i = 0; i < qtProjeto; i++) {
+            if (tipo == "MIT")
+                mitDocum = document.getElementById('controlMIT').value;
+            else if (tipo == "P")
+                mitDocum = mitP[i];
+            else if (tipo == "M")
+                mitDocum = mitM[i];
+            else if (tipo == "G")
+                mitDocum = mitG[i];
+    
+            var xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">' +
+                '<soapenv:Header/>' +
+                '<soapenv:Body>' +
+                '<ws:create>' +
+                '<companyId>1</companyId>' +
+                '<username>admin</username>' +
+                '<password>!Senha@2020!</password>' +
+                '<card>' +
+                '<item>' +
+                '<attachs/>' +
+                '<cardData>' +
+                '<field>cod_client</field>' +
+                '<value>' + document.getElementById('cod_client').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>nm_client</field>' +
+                '<value>' + document.getElementById('nm_client').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>projeto</field>' +
+                '<value>' + document.getElementById('projeto').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>nm_projeto</field>' +
+                '<value>' + document.getElementById('nm_projeto').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>nm_responsavel</field>' +
+                '<value>' + document.getElementById('nm_responsavel').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>emailCliente</field>' +
+                '<value>' + document.getElementById('emailCliente').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>controlMIT</field>' +
+                '<value>' + mitDocum + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>loja</field>' +
+                '<value>' + document.getElementById('loja').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>codMatricula</field>' +
+                '<value>' + document.getElementById('codMatricula').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>tipoProjeto</field>' +
+                '<value>' + tipo + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>IdDocumSign</field>' +
+                '<value>0</value>' +
+                '</cardData>1' +
+                '<colleagueId>'+WCMAPI.userCode+'</colleagueId>' +
+                '<docapprovers />' +
+                '<docsecurity />' +
+                '<expires>false</expires>' +
+                '<parentDocumentId>203899</parentDocumentId>' +
+                '<reldocs />' +
+                '</item>' +
+                '</card>' +
+                '</ws:create>' +
+                '</soapenv:Body>' +
+                '</soapenv:Envelope>';
+    
+            var wsUrl = WCMAPI.getServerURL() + "/webdesk/ECMCardService?wsdl";
+            $.ajax({
+                type: "POST",
+                dataType: "xml",
+                url: wsUrl,
+                data: xml,
+                crossDomain: true,
+                success: function (data) {
+                    FLUIGC.toast({
+                        title: "Sucesso",
+                        message: 'Projeto cadastrado com sucesso. Relação das MITs de acordo com o tamanho do projeto selecionado.',
+                        type: 'success',
+                        timeout: 10000
+                    });
+                },
+                error: function (error) {
+                    FLUIGC.toast({
+                        title: "Erro ao adicionar a documentação",
+                        message: 'Verificar o problema na integração do ECMCardService.',
+                        type: 'danger',
+                        timeout: 50000
+                    });
+                    console.log("Resultado com erro da Aplicação = " + error);
+                }
+            });
+        }
+    },
 
-    //     parentOBJ.WCMC.panel(cfg); 
-    // }
+    fnSelectAll: function (){
+        var sel = document.getElementsByClassName('cbxSelect');
+        if (document.getElementById('lblPrinc').checked == true) {
+            for (var i = 0; i < sel.length; i++) {
+                sel[i].checked = true;
+            }
+        }
+        else {
+            for (var i = 0; i < sel.length; i++) {
+                sel[i].checked = false;
+            }
+        }
+    },
+
+    fnDel: function () {
+       
+        var classCkbSelect = document.getElementsByClassName('cbxSelect');
+        console.log(classCkbSelect)
+        for (var i = 0; i < classCkbSelect.length; i++) {
+            if (classCkbSelect[i].checked == true) {
+                var c1 = DatasetFactory.createConstraint('documentid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
+                var datasetFormControleMits = DatasetFactory.getDataset('FormControleMits', null, new Array(c1), null);
+    
+                if (datasetFormControleMits.values[0].IdDocumSign == "0") {
+                    //fnDelete(classCkbSelect[i].value);
+                    var c1 = DatasetFactory.createConstraint('cardid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
+                    var dsDeleteCard = DatasetFactory.getDataset('dsDeleteCard', null, new Array(c1), null);
+    
+                    FLUIGC.toast({
+                        title: "Sucesso",
+                        message: 'Registro eliminado com sucesso.',
+                        type: 'success',
+                        timeout: 10000
+                    });
+                }
+                else {
+                    FLUIGC.toast({
+                        title: "Erro",
+                        message: 'O documento já foi para o Totvs Sign.',
+                        type: 'danger',
+                        timeout: 50000
+                    });
+                }
+            }
+        }
+
+        this.getArrayProject();
+    },
+
     
 });
 
