@@ -18,8 +18,8 @@
                     </div><br>
                     <div class="row">
                         <div class="col-md-3" style="width: -5px">
-                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar</button>
-                            <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>
+                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>
+                            <#--  <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>  -->
                             <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
                         </div>
                         <div class="col-md-9">
@@ -34,7 +34,7 @@
                             <table class="table table-striped table-bordered table-responsive" id="tnProjClient">
                                 <thead class="scroll-thead">
                                     <tr class="info">
-                                        <td><b><input type="checkbox" id="lblPrinc" data-checkboxTb></b></td>
+                                        <#--  <td><b><input type="checkbox" id="lblPrinc" data-checkboxTb></b></td>  -->
                                         <th><b>Cliente</b></th>
                                         <th><b>Código Projeto</b></th>
                                         <th><b>Nome do Projeto</b></th>
@@ -106,23 +106,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <#--  <div id=teste>
-                            <table class="table" id="tbTeste">
-                                <thead>
-                                    <tr class="info">
-                                        <td><b><input type="checkbox" id="testeId"></b></td>
-                                        <th><b>Cliente</b></th>
-                                        <th><b>Código Projeto</b></th>
-                                        <th><b>Nome do Projeto</b></th>
-                                        <th><b>Respons&aacute;vel</b></th>
-                                        <th><b>Status</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyTeste"></tbody>
-                            </table>
-                        </div>  -->
-
                     </div>
                 </div>
             </div>

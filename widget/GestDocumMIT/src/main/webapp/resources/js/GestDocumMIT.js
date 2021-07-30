@@ -11,8 +11,8 @@ var MyWidget = SuperWidget.extend({
         $('#data_'+this.instanceId).val(data);
 
         this.getArrayProject();
-        // this.tabela();
-    
+
+        
 
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
@@ -23,19 +23,21 @@ var MyWidget = SuperWidget.extend({
                 var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
                 return !~text.indexOf(val);
             }).hide();
-        });       
+        });
+
     },
+
 
     //BIND de eventos
     bindings: {
         local: {
             'refresh'   : ['click_fnRefresh','click_getArrayProject'],
-            'documento' : ['click_tabModal'],
+            'documento' : ['click_tabModal', 'click_getArrayProject'],
             'adicionar' : ['click_incluirMit'],
-            'checkboxTb': ['click_fnSelectAll'],
             'excluir'   : ['click_fnDel']
         },
         global: {
+            'checkboxTb': ['click_fnSelectAll'],
             'open-modal'   : ['click_modal'],
             'visualizarDoc': ['click_visualizar'],
             'cadastrar-MIT': ['click_setIncMIT','click_getEmpty']
@@ -81,6 +83,14 @@ var MyWidget = SuperWidget.extend({
                      '</div>'+
                      '</div>'+
                      '<div class="row">'+
+                     '<div class="form-group col-md-4">'+
+                     '<label for="stProjeto">Status do Projeto:</label>'+
+                     '<select id="st_projeto" class="form-control">'+
+                     '<option value="Ativo">Ativo</option>'+
+                     '<option value="Suspenso">Suspenso</option>'+
+                     '<option value="Encerrado">Encerrado</option>'+
+                     '</select>'+
+                     '</div>'+
                      '<div class="col-xs-6 col-sm-4">'+
                      '<label for="loja">Loja:</label>'+
                      '<input type="text" id="loja" name="loja" class="form-control">'+
@@ -102,16 +112,14 @@ var MyWidget = SuperWidget.extend({
                      '</label>'+
                      '</div>'+
                      '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
+                     '<input type="text" id="codMatricula" name="codMatricula" class="form-control">'+
+                     '</div>'+
                      '<div class="clearfix visible-xs-block"></div>'+
                      '<div id="devControlMIT" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4" style="display: none;">'+
                      '<label for="controlMIT">MIT:</label>'+
                      '<input type="text" id="controlMIT" name="controlMIT" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="row">'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
-                     '<input type="text" id="codMatricula" name="codMatricula" class="form-control">'+
                      '</div>'+
                      '</div>'+
                      '</div>'+
@@ -131,9 +139,56 @@ var MyWidget = SuperWidget.extend({
             if(err) {
                 // do error handling
             } else {
-            
-                var dataset = DatasetFactory.getDataset('formControleMits');
-                var users = dataset.values;
+                
+                var dataset = DatasetFactory.getDataset('FormControleMits', null, null, null);
+                var states = [];
+
+                for (var i = 0; i < dataset.values.length; i++) {
+                    states.push(dataset.values[i]['nm_responsavel'],
+                                dataset.values[i]['codMatricula']);
+                }
+
+                console.table(states)
+
+                var myAutocomplete = FLUIGC.autocomplete('#nm_responsavel', {
+                    source: substringMatcher(states),
+                    name: 'responsavel',
+                    displayKey: 'description',
+                    tagClass: 'tag-gray',
+                    type: 'tagAutocomplete',
+                    allowDuplicates: false,
+                    highlight: true,
+                    minLength: 1,
+                    hint: true,
+                    searchTimeout: 100,
+                });
+
+                function substringMatcher(strs) {
+                    return function findMatches(q, cb) {
+                        var matches, substrRegex;
+                 
+                        matches = [];
+                 
+                        substrRegex = new RegExp(q, 'i');
+                 
+                        $.each(strs, function (i, str) {
+                            if (substrRegex.test(str)) {
+                                matches.push({
+                                    description: str
+                                });
+                            }
+                        });
+                        cb(matches);
+                    };
+                }
+
+                // autocomplete.on("fluig.autocomplete.selected", function(event){
+                //     var itemSelecionado = event.item;
+                //     $("#codMatricula").val(itemSelecionado)
+                // });
+                
+                
+                /*var users = dataset.values;
      
                 var settingsExampleDataset = {
                     source: users,
@@ -155,7 +210,7 @@ var MyWidget = SuperWidget.extend({
                 };
             
                 var filter = FLUIGC.filter('#codMatricula', settingsExampleDataset);
-
+                */
             }
         });        
     },
@@ -163,14 +218,15 @@ var MyWidget = SuperWidget.extend({
     // Modal Documentos
     tabModal: function (){
 
-        var myModal = FLUIGC.modal({
+        var myModalDoc = FLUIGC.modal({
             title: 'MIT',
             content: '<div class="tabModal" id="tabModal">'+
                      '<table id="tabelaModal" class="table table-striped table-bordered table-responsive">'+
                      '<thead>'+
                      '<tr class="info">'+
-                     '<td><b>Sequ&ecirc;ncia</b></td>'+
-                     '<td><b>Documento</b></td>'+
+                     '<td><b><input type="checkbox" id="lblPrinc" data-checkboxTb></b></td>'+
+                     '<td><b>Documentos</b></td>'+
+                     '<td><b>Projeto</b></td>'+
                      '</tr>'+
                      '</thead>'+
                      '<tbody id="tbodyModal"></tbody>'+
@@ -181,16 +237,40 @@ var MyWidget = SuperWidget.extend({
             actions: [{
                 'label': 'Gráficos',
                 'bind': 'data-open-modal',
-            },{
-                'label': 'Fechar',
-                'autoClose': true
-            }]
+                },
+                {
+                    'label': 'Excluir',
+                    'bind': 'data-excluir',
+                },
+                {
+                    'label': 'Fechar',
+                    'autoClose': true
+                }]
         }, function(err, data) {
             if(err) {
                 // do error handling
             } else {
-                
-                var html = "";
+
+                var htmlTab2 = "";
+                var ds2 = DatasetFactory.getDataset('FormControleMits', null, null, null);
+
+                for (var i = 0; i < ds2.values.length; i++){
+
+                    var id = ds2.values[i]['documentid'];
+                    var resp = ds2.values[i]['nm_projeto'];
+                    var mit = ds2.values[i]['controlMIT'];
+
+                    htmlTab2 += "<tr>"+
+                                '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + id + '"></td>' +
+                                "<td><button type='button' class='btn btn-link' data-visualizarDoc>" + mit +"</td>" +
+                                "<td>" + resp +"</td>"+
+                                "</tr>";
+            
+                }
+
+                document.getElementById("tbodyModal").innerHTML = htmlTab2;
+
+               /* var html = "";
     
                 $.ajax({ 
                     async : true, 
@@ -212,9 +292,10 @@ var MyWidget = SuperWidget.extend({
 
                         document.getElementById('tbodyModal').innerHTML = html;
                     } 
-                });
+                });*/
             }
-        });        
+        }); 
+        
     },
 
     //Visualizacao de documentos
@@ -351,7 +432,7 @@ var MyWidget = SuperWidget.extend({
     //Tabela de dados principal
     getArrayProject: function (){
         
-        // var html = "";
+        var htmlTab2 = "";
         var ds = DatasetFactory.getDataset('FormControleMits', null, null, null);
         var arr = [];
 
@@ -392,10 +473,10 @@ var MyWidget = SuperWidget.extend({
                 var html = "";
 
                 html += "<tr>"+
-                '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
+                // '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
                 "<td>" + c1 +"</td>"+
                 "<td>" + c2 +"</td>" +
-                "<td><button type='button' class='btn btn-link' data-documento>" + c3 +"</td>" +
+                "<td class='btnProjeto'><button type='button' class='btn btn-link tabDoc' data-documento>" + c3 +"<input type='hidden' class='btnProjeto' value='" + c3 +"'></td>" +
                 "<td>" + c4 +"</td>" +
                 '<td>' + c5 +'</button></td>' +
                 "</tr>";
@@ -404,23 +485,26 @@ var MyWidget = SuperWidget.extend({
     
             });
 
-                // console.log("TESTE TABELA:  "+ tabMap)
-
-            // html += "<tr class='tr'>"+
-            //     '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
-            //     "<td class='td'>" + codClient +"</td>"+
-            //     "<td class='td'>" + codProjeto +"</td>" +
-            //     "<td class='td'><button type='button' class='btn btn-link' data-documento>" + nomeProjeto +"</td>" +
-            //     "<td class='td'>" + nomeResponsavel +"</td>" +
-            //     '<td class="td">' + status +'</button></td>' +
-            //     "</tr>";
             
-                
         }
 
-
         document.getElementById("arrayProj").innerHTML = tabMap.join('');
-        
+
+        $('#tnProjClient tbody tr td.btnProjeto').click(function(){
+            var idElemento = $(this).find("input").val() ;  
+            console.log(idElemento);
+
+            var $rows = $('#tabModal tr');
+            $(idElemento).change(function() {
+                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                
+                $rows.show().filter(function() {
+                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                    return !~text.indexOf(val);
+                }).hide();
+            }); 
+         });
+                
     },
     
     fnRefresh: function (){
@@ -441,7 +525,9 @@ var MyWidget = SuperWidget.extend({
         document.getElementById('loja').value = "";
         document.getElementById('tipoProjetoP').checked = true;
         document.getElementById('controlMIT').value = "";
-    
+        document.getElementById('st_projeto').value = "0";
+        myTagAutocomplete.remove(states);
+
         // document.getElementById('emailTotvsSign').value = "";
         // document.getElementById('nomeTotvsSign').value = "";
         // document.getElementById('cpfTotvsSign').value = "";
@@ -567,6 +653,10 @@ var MyWidget = SuperWidget.extend({
                 '<cardData>' +
                 '<field>loja</field>' +
                 '<value>' + document.getElementById('loja').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>Status</field>' +
+                '<value>' + document.getElementById('st_projeto').value + '</value>' +
                 '</cardData>1' +
                 '<cardData>' +
                 '<field>codMatricula</field>' +
