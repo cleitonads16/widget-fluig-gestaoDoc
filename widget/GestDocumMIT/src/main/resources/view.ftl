@@ -18,8 +18,7 @@
                     </div><br>
                     <div class="row">
                         <div class="col-md-3" style="width: -5px">
-                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>
-                            <#--  <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>  -->
+                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>&nbsp;&nbsp;&nbsp;
                             <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
                         </div>
                         <div class="col-md-9">
@@ -40,70 +39,10 @@
                                         <th><b>Nome do Projeto</b></th>
                                         <th><b>Respons&aacute;vel</b></th>
                                         <th><b>Status</b></th>
+                                        <th><b>Editar</b></th>
                                     </tr>
                                 </thead>
-                                <tbody id="arrayProj" class="scroll-tbody-y table-body">
-                                    <!-- tr>
-                                        <td>1520025</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520025" onclick="fnArrayMIT(this);">MIT P</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1520026</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520026" onclick="fnArrayMIT(this);">MIT M</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1520027</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520027" onclick="fnArrayMIT(this);">MIT G</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1520028</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520028" onclick="fnArrayMIT(this);">MIT GG</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1520029</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520029" onclick="fnArrayMIT(this);">MIT P</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1520030</td>
-                                        <td>Projeto Zeta</td>
-                                        <td>OCP (Omni Corp. Project)</td>
-                                        <td>Lucas Braga Folha</td>
-                                        <td><button type="button" id="btLinkMIT" class="btn btn-link" value="1520030" onclick="fnArrayMIT(this);">MIT M</button></td>
-                                        <td>100.00</td>
-                                        <td>25.00</td>
-                                        <td>25%</td>
-                                    </tr -->
-                                </tbody>
+                                <tbody id="arrayProj" class="scroll-tbody-y table-body"></tbody>
                             </table>
                         </div>
                     </div>

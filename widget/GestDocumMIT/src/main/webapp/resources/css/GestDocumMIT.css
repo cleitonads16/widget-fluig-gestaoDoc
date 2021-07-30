@@ -50,3 +50,16 @@ th {
     text-align    : left;
     vertical-align: middle;
 }
+
+i {
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.btn-link {
+    white-space: normal;
+    word-wrap  : break-word;
+}

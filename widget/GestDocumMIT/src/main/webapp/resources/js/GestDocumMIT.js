@@ -12,8 +12,6 @@ var MyWidget = SuperWidget.extend({
 
         this.getArrayProject();
 
-        
-
         //Filtar tabela
         var $rows = $('#tnProjClient tr');
         $('#campFiltro').keyup(function() {
@@ -25,30 +23,106 @@ var MyWidget = SuperWidget.extend({
             }).hide();
         });
 
+        setTimeout(function(){
+            console.log('TIMEOUT')
+        },3000)
+
     },
 
-
-    //BIND de eventos
-    bindings: {
+     //BIND de eventos
+     bindings: {
         local: {
             'refresh'   : ['click_fnRefresh','click_getArrayProject'],
             'documento' : ['click_tabModal', 'click_getArrayProject'],
             'adicionar' : ['click_incluirMit'],
-            'excluir'   : ['click_fnDel']
+            
         },
         global: {
-            'checkboxTb': ['click_fnSelectAll'],
+            'checkboxTb'   : ['click_fnSelectAll'],
             'open-modal'   : ['click_modal'],
             'visualizarDoc': ['click_visualizar'],
-            'cadastrar-MIT': ['click_setIncMIT','click_getEmpty']
+            'cadastrar-MIT': ['click_setIncMIT','click_getEmpty'],
+            'editarProj'   : ['click_modalEditar'],
+            'excluir'      : ['click_fnDel']
         }
     },
 
-     // Modal Incluir MIT
-     incluirMit: function (){
+    //Tabela de dados principal
+    getArrayProject: function (){
+        
+        var htmlTab2 = "";
+        var ds = DatasetFactory.getDataset('FormControleMits', null, null, null);
+        var arr = [];
+
+        for (var i = 0; i < ds.values.length; i++){
+            
+            var docId = ds.values[i]['documentid'];
+            var codClient = ds.values[i]['cod_client'];
+            var codProjeto = ds.values[i]['projeto'];
+            var nomeProjeto = ds.values[i]['nm_projeto'];
+            var nomeResponsavel = ds.values[i]['nm_responsavel'];
+            var status = 'Ativo'
+            // var status = ds.values[i]['controlMIT'];
+
+            // Insere dados em nova array
+            arr.push({
+
+                cliente: codClient,
+                projeto: codProjeto,
+                nProjeto: nomeProjeto,
+                responsavel: nomeResponsavel,
+                stausProjeto: status
+            })
+
+            //Filtrando os dados repetidos
+            arr = arr.filter(function (a) {
+                return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
+            }, Object.create(null))
+
+            // Mapeia os dados filtrados e insere em tabela
+            var tabMap = arr.map(function(item, indice){
+
+                var c1 = item.cliente;
+                var c2 = item.projeto;
+                var c3 = item.nProjeto;
+                var c4 = item.responsavel;
+                var c5 = item.stausProjeto;
+
+                var html = "";
+
+                html += "<tr class='tr_class'>"+
+                "<td>" + c1 +"</td>"+
+                "<td>" + c2 +"</td>" +
+                "<td class='btnProjeto'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"<input type='hidden' class='btnProjeto' value='" + c3 +"'></td>" +
+                "<td>" + c4 +"</td>" +
+                '<td>' + c5 +'</td>' +
+                '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md" data-editarProj></i></button></td>' +
+                "</tr>";
+
+                return html 
+    
+            });
+            
+        }
+
+        document.getElementById("arrayProj").innerHTML = tabMap.join('');
+
+        // $('#tnProjClient tbody tr td.btnProjeto').click(function(){
+        //     var idElemento = $(this).find("input").val() ; 
+        //     setTimeout(function(){
+        //         console.log(idElemento);
+        //         $("#filtrar_tabela").val(idElemento)
+        //         teste()
+        //     },1000)
+        // }); 
+        
+    },
+
+    // Modal Incluir MIT
+    incluirMit: function (){
 
         var myModalCadastrarMit = FLUIGC.modal({
-            title: 'Incluir MIT',
+            title: 'Incluir Projeto',
             content: '<div class="tabModal" id="tabModal">'+
                      '<div class="panel panel-info">'+
                      '<div class="panel-body">'+
@@ -181,39 +255,111 @@ var MyWidget = SuperWidget.extend({
                         cb(matches);
                     };
                 }
-
-                // autocomplete.on("fluig.autocomplete.selected", function(event){
-                //     var itemSelecionado = event.item;
-                //     $("#codMatricula").val(itemSelecionado)
-                // });
-                
-                
-                /*var users = dataset.values;
-     
-                var settingsExampleDataset = {
-                    source: users,
-                    displayKey: 'codMatricula',
-                    multiSelect: false,
-                    style: {
-                        autocompleteTagClass: 'tag-gray',
-                        tableSelectedLineClass: 'info'
-                    },
-                    table: {
-                        header: [{
-                            'title': 'Matrícula',
-                            'size': 'col-md-4',
-                            'dataorder': 'matricula',
-                            'standard': true
-                        }],
-                        renderContent: ['codMatricula']
-                    }
-                };
-            
-                var filter = FLUIGC.filter('#codMatricula', settingsExampleDataset);
-                */
             }
         });        
     },
+
+    // Modal para editar projetos
+    modalEditar: function(){
+        var myModalEditar = FLUIGC.modal({
+            title: 'Editar Projeto',
+            content: '<div class="divModalEditar" id="divModalEditar">'+
+                     '<div class="panel panel-info">'+
+                     '<div class="panel-body">'+
+                     '<div class="row">'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="cod_client">C&oacute;digo do Cliente:</label>'+
+                     '<input type="text" id="cod_client_editar" name="cod_client_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_client">Nome do Cliente:</label>'+
+                     '<input type="text" id="nm_client_editar" name="nm_client_editar" class="form-control">'+
+                     '</div>'+
+                    //  '<div class="clearfix visible-xs-block"></div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="projeto">C&oacute;digo do Projeto:</label>'+
+                     '<input type="text" id="projeto_editar" name="projeto_editar" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="row">'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_projeto">Nome do Projeto:</label>'+
+                     '<input type="text" id="nm_projeto_editar" name="nm_projeto_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="nm_responsavel">Respons&aacute;vel:</label>'+
+                     '<input type="text" id="nm_responsavel_editar" name="nm_responsavel_editar" class="form-control">'+
+                     '</div>'+
+                    //  '<div class="clearfix visible-xs-block"></div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="emailCliente">E-Mail do Cliente:</label>'+
+                     '<input type="email" id="emailCliente_editar" name="emailCliente_editar" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="row">'+
+                     '<div class="form-group col-md-4">'+
+                     '<label for="status">Status:</label>'+
+                     '<input type="email" id="st_projeto_editar" name="st_projeto_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="col-xs-6 col-sm-4">'+
+                     '<label for="loja">Loja:</label>'+
+                     '<input type="text" id="loja_editar" name="loja_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label class="control-label" style="margin-bottom: 10px;">Selecione o tipo de projeto:</label>'+
+                     '<div class="div_margin">'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoP_editar" value="P" data-P>P'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoM_editar" value="M" data-M>M'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoG_editar" value="G" data-G>G'+
+                     '</label>'+
+                     '<label class="radio-inline">'+
+                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoMIT_editar" value="MIT" data-MIT>MIT'+
+                     '</label>'+
+                     '</div>'+
+                     '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
+                     '<input type="text" id="codMatricula_editar" name="codMatricula_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label for="horasPrev">Horas Previstas:</label>'+
+                     '<input type="text" id="horasPrev_editar" name="horasPrev_editar" class="form-control">'+
+                     '</div>'+
+                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
+                     '<label for="horasPrev">Horas Realizadas:</label>'+
+                     '<input type="text" id="horasRealiz_editar" name="horasRealiz_editar" class="form-control">'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>'+       
+                     '</div>',
+            id: 'fluig-modaEditar',
+            size: 'large',
+            actions: [{
+                'label': 'Projeto Editado',
+                'bind': 'data-editarProjeto',
+                'autoClose': true
+            },{
+                'label': 'Fechar',
+                'autoClose': true
+            }]
+        }, function(err, data) {
+            if(err) {
+                // do error handling
+            } else {
+                
+                
+            }
+        });        
+    },
+
+
+   
 
     // Modal Documentos
     tabModal: function (){
@@ -221,6 +367,7 @@ var MyWidget = SuperWidget.extend({
         var myModalDoc = FLUIGC.modal({
             title: 'MIT',
             content: '<div class="tabModal" id="tabModal">'+
+                     '<input type="text" id="filtrar_tabela" name="filtrar_tabela"/>'+
                      '<table id="tabelaModal" class="table table-striped table-bordered table-responsive">'+
                      '<thead>'+
                      '<tr class="info">'+
@@ -262,41 +409,21 @@ var MyWidget = SuperWidget.extend({
 
                     htmlTab2 += "<tr>"+
                                 '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + id + '"></td>' +
-                                "<td><button type='button' class='btn btn-link' data-visualizarDoc>" + mit +"</td>" +
+                                "<td><button type='button' class='btn-link' data-visualizarDoc>" + mit +"</td>" +
                                 "<td>" + resp +"</td>"+
                                 "</tr>";
             
                 }
 
                 document.getElementById("tbodyModal").innerHTML = htmlTab2;
-
-               /* var html = "";
-    
-                $.ajax({ 
-                    async : true, 
-                    type : "GET", 
-                    contentType: "application/json", 
-                    url : '/api/public/ecm/document/listDocumentWithChildren/203444', 
-                    success: function(retorno) {
-                        $.each(retorno.content,function(k,v){ 
-                            var objeto = new Object(); objeto = v.children; 
-                            for(var x = 0; x < objeto.length; x++){ 
-                                
-                                html += "<tr>"+
-                                        "<td>"+ x +"</td>" +
-                                        '<td><button type="button" class="btn btn-link" data-visualizarDoc>'+ objeto[x].description +'</button></td>' +
-                                        "</tr>";
-                            } 
-            
-                        })
-
-                        document.getElementById('tbodyModal').innerHTML = html;
-                    } 
-                });*/
             }
-        }); 
+        });
         
     },
+
+    
+
+    
 
     //Visualizacao de documentos
     visualizar: function(){
@@ -382,130 +509,7 @@ var MyWidget = SuperWidget.extend({
         });
     },
 
-    // Modal Visualizar documentos
-    /*modalVisuDoc: function (){
-        console.log('CLIQUEI EM VISUALIZAR DOC')
-        var myModalVisuDoc = FLUIGC.modal({
-            title: 'Visualizar Documento',
-            content: '<div id="divContratoAss" class="row">'+
-                     '<div id="divContratoAss" class="panel panel-primary">'+
-                     '<div class="panel-heading">'+
-                     '<h3><b><i class="fluigicon fluigicon-file-approval icon-md"></i>MIT</b>'+
-                     '</h3>'+
-                     '</div>'+
-                     '<div class="panel-body">'+
-                     '<div class="row">'+
-                     '<div class="col-xs-5 col-sm-3">'+
-                     '<button type="button" class="btn btn-primary" id="contratoTotvsSign">'+
-                     '<i class="fluigicon fluigicon-download icon-xl"></i>'+
-                     '</button>'+
-                     '</div>'+
-                     '</div>'+
-                     '<br>'+
-                     '<div class="row">'+
-                     '<div class="col-xs-12 col-sm-12">'+
-                     '<iframe id="downPDF" height="500px" class="col-xs-12 col-sm-12"></iframe>'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>',
-            id: 'fluig-modalVisuDoc',
-            size: 'large',
-            actions: [/*{
-                'label': 'Salvar',
-                'bind': 'data-open-modalVisuDoc',
-            },{
-                'label': 'Fechar',
-                'autoClose': true
-            }]
-        }, function(err, data) {
-            if(err) {
-                // do error handling
-            } else {
-                
-                
-            }
-        });        
-    },*/
-
-    //Tabela de dados principal
-    getArrayProject: function (){
-        
-        var htmlTab2 = "";
-        var ds = DatasetFactory.getDataset('FormControleMits', null, null, null);
-        var arr = [];
-
-        for (var i = 0; i < ds.values.length; i++){
-            
-            var docId = ds.values[i]['documentid'];
-            var codClient = ds.values[i]['cod_client'];
-            var codProjeto = ds.values[i]['projeto'];
-            var nomeProjeto = ds.values[i]['nm_projeto'];
-            var nomeResponsavel = ds.values[i]['nm_responsavel'];
-            var status = 'Ativo'
-            // var status = ds.values[i]['controlMIT'];
-
-            // Insere dados em nova array
-            arr.push({
-
-                cliente: codClient,
-                projeto: codProjeto,
-                nProjeto: nomeProjeto,
-                responsavel: nomeResponsavel,
-                stausProjeto: status
-            })
-
-            //Filtrando os dados repetidos
-            arr = arr.filter(function (a) {
-                return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
-            }, Object.create(null))
-
-            // Mapeia os dados filtrados e insere em tabela
-            var tabMap = arr.map(function(item, indice){
-
-                var c1 = item.cliente;
-                var c2 = item.projeto;
-                var c3 = item.nProjeto;
-                var c4 = item.responsavel;
-                var c5 = item.stausProjeto;
-
-                var html = "";
-
-                html += "<tr>"+
-                // '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + docId + '"></td>' +
-                "<td>" + c1 +"</td>"+
-                "<td>" + c2 +"</td>" +
-                "<td class='btnProjeto'><button type='button' class='btn btn-link tabDoc' data-documento>" + c3 +"<input type='hidden' class='btnProjeto' value='" + c3 +"'></td>" +
-                "<td>" + c4 +"</td>" +
-                '<td>' + c5 +'</button></td>' +
-                "</tr>";
-
-                return html 
     
-            });
-
-            
-        }
-
-        document.getElementById("arrayProj").innerHTML = tabMap.join('');
-
-        $('#tnProjClient tbody tr td.btnProjeto').click(function(){
-            var idElemento = $(this).find("input").val() ;  
-            console.log(idElemento);
-
-            var $rows = $('#tabModal tr');
-            $(idElemento).change(function() {
-                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-                
-                $rows.show().filter(function() {
-                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                    return !~text.indexOf(val);
-                }).hide();
-            }); 
-         });
-                
-    },
     
     fnRefresh: function (){
 
@@ -528,12 +532,6 @@ var MyWidget = SuperWidget.extend({
         document.getElementById('st_projeto').value = "0";
         myTagAutocomplete.remove(states);
 
-        // document.getElementById('emailTotvsSign').value = "";
-        // document.getElementById('nomeTotvsSign').value = "";
-        // document.getElementById('cpfTotvsSign').value = "";
-        // document.getElementById('telTotvsSign').value = "";
-        // document.getElementById('posTotvsSign').value = "";
-        // document.getElementById('codDocumID').value = "";
     },
 
     setIncMIT: function(){
@@ -761,7 +759,5 @@ var MyWidget = SuperWidget.extend({
 
     
 });
-
-
 
 
