@@ -5,10 +5,12 @@ body {
 
 .divLoading,
 .tabModal {
-    height    : auto;
+    /* height    : auto; */
     overflow-y: auto;
     width     : 100%;
     border    : 5px solid white;
+    max-height: 250vw;
+    height    : 300px;
 }
 
 table {
@@ -27,10 +29,10 @@ th {
     text-overflow: ellipsis;
 }
 
-th {
+/* th {
     position: sticky;
     top     : 0;
-}
+} */
 
 .modal {
     text-align: center;

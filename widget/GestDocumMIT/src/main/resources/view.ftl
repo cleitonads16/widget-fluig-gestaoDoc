@@ -34,6 +34,7 @@
                                 <thead class="scroll-thead">
                                     <tr class="info">
                                         <#--  <td><b><input type="checkbox" id="lblPrinc" data-checkboxTb></b></td>  -->
+
                                         <th><b>Cliente</b></th>
                                         <th><b>Código Projeto</b></th>
                                         <th><b>Nome do Projeto</b></th>

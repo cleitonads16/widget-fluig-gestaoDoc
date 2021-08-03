@@ -43,14 +43,14 @@ var MyWidget = SuperWidget.extend({
             'visualizarDoc': ['click_visualizar'],
             'cadastrar-MIT': ['click_setIncMIT','click_getEmpty'],
             'editarProj'   : ['click_modalEditar'],
-            'excluir'      : ['click_fnDel']
+            // 'excluir'      : ['click_fnDel']
         }
     },
 
     //Tabela de dados principal
     getArrayProject: function (){
         
-        var htmlTab2 = "";
+        // var htmlTab2 = "";
         var ds = DatasetFactory.getDataset('FormControleMits', null, null, null);
         var arr = [];
 
@@ -61,12 +61,11 @@ var MyWidget = SuperWidget.extend({
             var codProjeto = ds.values[i]['projeto'];
             var nomeProjeto = ds.values[i]['nm_projeto'];
             var nomeResponsavel = ds.values[i]['nm_responsavel'];
-            var status = 'Ativo'
-            // var status = ds.values[i]['controlMIT'];
+            var status = ds.values[i]['st_projeto'];
 
             // Insere dados em nova array
             arr.push({
-
+                id: docId,
                 cliente: codClient,
                 projeto: codProjeto,
                 nProjeto: nomeProjeto,
@@ -87,16 +86,17 @@ var MyWidget = SuperWidget.extend({
                 var c3 = item.nProjeto;
                 var c4 = item.responsavel;
                 var c5 = item.stausProjeto;
+                var c6 = item.id;
 
                 var html = "";
 
                 html += "<tr class='tr_class'>"+
-                "<td>" + c1 +"</td>"+
+                "<td><input type='hidden' class='id_documento' value='"+ c6 + "'/>" + c1 + "</td>"+
                 "<td>" + c2 +"</td>" +
-                "<td class='btnProjeto'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"<input type='hidden' class='btnProjeto' value='" + c3 +"'></td>" +
+                "<td class='btnProjeto'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"<input type='hidden' class='btnProjeto' value='" + c3 +"'/></td>" +
                 "<td>" + c4 +"</td>" +
                 '<td>' + c5 +'</td>' +
-                '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md" data-editarProj></i></button></td>' +
+                '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md icone" data-editarProj></i></button></td>' +
                 "</tr>";
 
                 return html 
@@ -106,15 +106,6 @@ var MyWidget = SuperWidget.extend({
         }
 
         document.getElementById("arrayProj").innerHTML = tabMap.join('');
-
-        // $('#tnProjClient tbody tr td.btnProjeto').click(function(){
-        //     var idElemento = $(this).find("input").val() ; 
-        //     setTimeout(function(){
-        //         console.log(idElemento);
-        //         $("#filtrar_tabela").val(idElemento)
-        //         teste()
-        //     },1000)
-        // }); 
         
     },
 
@@ -124,81 +115,89 @@ var MyWidget = SuperWidget.extend({
         var myModalCadastrarMit = FLUIGC.modal({
             title: 'Incluir Projeto',
             content: '<div class="tabModal" id="tabModal">'+
-                     '<div class="panel panel-info">'+
-                     '<div class="panel-body">'+
-                     '<div class="row">'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="cod_client">C&oacute;digo do Cliente:</label>'+
-                     '<input type="text" id="cod_client" name="cod_client" class="form-control">'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_client">Nome do Cliente:</label>'+
-                     '<input type="text" id="nm_client" name="nm_client" class="form-control">'+
-                     '</div>'+
-                     '<div class="clearfix visible-xs-block"></div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="projeto">C&oacute;digo do Projeto:</label>'+
-                     '<input type="text" id="projeto" name="projeto" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="row">'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_projeto">Nome do Projeto:</label>'+
-                     '<input type="text" id="nm_projeto" name="nm_projeto" class="form-control">'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_responsavel">Respons&aacute;vel:</label>'+
-                     '<input type="text" id="nm_responsavel" name="nm_responsavel" class="form-control">'+
-                     '</div>'+
-                     '<div class="clearfix visible-xs-block"></div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="emailCliente">E-Mail do Cliente:</label>'+
-                     '<input type="email" id="emailCliente" name="emailCliente" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="row">'+
-                     '<div class="form-group col-md-4">'+
-                     '<label for="stProjeto">Status do Projeto:</label>'+
-                     '<select id="st_projeto" class="form-control">'+
-                     '<option value="Ativo">Ativo</option>'+
-                     '<option value="Suspenso">Suspenso</option>'+
-                     '<option value="Encerrado">Encerrado</option>'+
-                     '</select>'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="loja">Loja:</label>'+
-                     '<input type="text" id="loja" name="loja" class="form-control">'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label class="control-label" style="margin-bottom: 10px;">Selecione o tipo de projeto:</label>'+
-                     '<div class="div_margin">'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto" id="tipoProjetoP" value="P" data-P>P'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto" id="tipoProjetoM" value="M" data-M>M'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto" id="tipoProjetoG" value="G" data-G>G'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto" id="tipoProjetoMIT" value="MIT" data-MIT>MIT'+
-                     '</label>'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
-                     '<input type="text" id="codMatricula" name="codMatricula" class="form-control">'+
-                     '</div>'+
-                     '<div class="clearfix visible-xs-block"></div>'+
-                     '<div id="devControlMIT" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4" style="display: none;">'+
-                     '<label for="controlMIT">MIT:</label>'+
-                     '<input type="text" id="controlMIT" name="controlMIT" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+       
-                     '</div>',
+                    '<div class="panel panel-info">'+
+                        '<div class="panel-body">'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="cod_client">C&oacute;digo do Cliente:</label>'+
+                                '<input type="text" id="cod_client" name="cod_client" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="nm_client">Nome do Cliente:</label>'+
+                                '<input type="text" id="nm_client" name="nm_client" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="clearfix visible-xs-block">'+'</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="projeto">C&oacute;digo do Projeto:</label>'+
+                                '<input type="text" id="projeto" name="projeto" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="nm_projeto">Nome do Projeto:</label>'+
+                                '<input type="text" id="nm_projeto" name="nm_projeto" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="nm_responsavel">Respons&aacute;vel:</label>'+
+                                '<input type="text" id="nm_responsavel" name="nm_responsavel" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="clearfix visible-xs-block">'+'</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="emailCliente">E-Mail do Cliente:</label>'+
+                                '<input type="email" id="emailCliente" name="emailCliente" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="stProjeto">Status do Projeto:</label>'+
+                                '<select id="st_projeto" class="form-control">'+
+                                '<option value="Ativo">Ativo</option>'+
+                                '<option value="Suspenso">Suspenso</option>'+
+                                '<option value="Encerrado">Encerrado</option>'+
+                                '</select>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="loja">Loja:</label>'+
+                                '<input type="text" id="loja" name="loja" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label class="control-label" style="margin-bottom: 10px;">Selecione o tipo de projeto:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+                                '<label class="radio-inline">'+
+                                '<input type="radio" name="tipoProjeto" id="tipoProjetoP" value="P" data-P/>P'+
+                                '</label>'+
+                                '<label class="radio-inline">'+
+                                '<input type="radio" name="tipoProjeto" id="tipoProjetoM" value="M" data-M/>M'+
+                                '</label>'+
+                                '<label class="radio-inline">'+
+                                '<input type="radio" name="tipoProjeto" id="tipoProjetoG" value="G" data-G/>G'+
+                                '</label>'+
+                                '<label class="radio-inline">'+
+                                '<input type="radio" name="tipoProjeto" id="tipoProjetoMIT" value="MIT" data-MIT/>MIT'+
+                                '</label>'+
+                                '</div>'+
+                                '<div class="clearfix visible-xs-block"></div>'+
+                                '<div id="devControlMIT" class="col-md-4" style="display: none;">'+
+                                '<label for="controlMIT">MIT:</label>'+
+                                '<input type="text" id="controlMIT" name="controlMIT" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="codMatricula">Matr&iacute;cula:</label>'+
+                                '<input type="text" id="codMatricula" name="codMatricula" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="horasPrev">Horas Previstas:</label>'+
+                                '<input type="text" name="hr_previstas" id="hr_previstas" class="form-control"/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="horasPrev">Horas Realizadas:</label>'+
+                                '<input type="text" name="hr_realizadas" id="hr_realizadas" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+       
+                '</div>',
             id: 'fluig-modaCadastrarMit',
             size: 'large',
             actions: [{
@@ -221,8 +220,6 @@ var MyWidget = SuperWidget.extend({
                     states.push(dataset.values[i]['nm_responsavel'],
                                 dataset.values[i]['codMatricula']);
                 }
-
-                console.table(states)
 
                 var myAutocomplete = FLUIGC.autocomplete('#nm_responsavel', {
                     source: substringMatcher(states),
@@ -259,85 +256,77 @@ var MyWidget = SuperWidget.extend({
         });        
     },
 
-    // Modal para editar projetos
+    // Modal editar projetos
     modalEditar: function(){
         var myModalEditar = FLUIGC.modal({
             title: 'Editar Projeto',
             content: '<div class="divModalEditar" id="divModalEditar">'+
-                     '<div class="panel panel-info">'+
-                     '<div class="panel-body">'+
-                     '<div class="row">'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="cod_client">C&oacute;digo do Cliente:</label>'+
-                     '<input type="text" id="cod_client_editar" name="cod_client_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_client">Nome do Cliente:</label>'+
-                     '<input type="text" id="nm_client_editar" name="nm_client_editar" class="form-control">'+
-                     '</div>'+
-                    //  '<div class="clearfix visible-xs-block"></div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="projeto">C&oacute;digo do Projeto:</label>'+
-                     '<input type="text" id="projeto_editar" name="projeto_editar" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="row">'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_projeto">Nome do Projeto:</label>'+
-                     '<input type="text" id="nm_projeto_editar" name="nm_projeto_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="nm_responsavel">Respons&aacute;vel:</label>'+
-                     '<input type="text" id="nm_responsavel_editar" name="nm_responsavel_editar" class="form-control">'+
-                     '</div>'+
-                    //  '<div class="clearfix visible-xs-block"></div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="emailCliente">E-Mail do Cliente:</label>'+
-                     '<input type="email" id="emailCliente_editar" name="emailCliente_editar" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="row">'+
-                     '<div class="form-group col-md-4">'+
-                     '<label for="status">Status:</label>'+
-                     '<input type="email" id="st_projeto_editar" name="st_projeto_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="col-xs-6 col-sm-4">'+
-                     '<label for="loja">Loja:</label>'+
-                     '<input type="text" id="loja_editar" name="loja_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label class="control-label" style="margin-bottom: 10px;">Selecione o tipo de projeto:</label>'+
-                     '<div class="div_margin">'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoP_editar" value="P" data-P>P'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoM_editar" value="M" data-M>M'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoG_editar" value="G" data-G>G'+
-                     '</label>'+
-                     '<label class="radio-inline">'+
-                     '<input type="radio" name="tipoProjeto_editar" id="tipoProjetoMIT_editar" value="MIT" data-MIT>MIT'+
-                     '</label>'+
-                     '</div>'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label for="codMatricula">Matr&iacute;cula:</label>'+
-                     '<input type="text" id="codMatricula_editar" name="codMatricula_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label for="horasPrev">Horas Previstas:</label>'+
-                     '<input type="text" id="horasPrev_editar" name="horasPrev_editar" class="form-control">'+
-                     '</div>'+
-                     '<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">'+
-                     '<label for="horasPrev">Horas Realizadas:</label>'+
-                     '<input type="text" id="horasRealiz_editar" name="horasRealiz_editar" class="form-control">'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+
-                     '</div>'+       
-                     '</div>',
+                    '<div class="panel panel-info">'+
+                        '<div class="panel-body">'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="cod_client">C&oacute;digo do Cliente: </label>'+
+                                '<input type="text" id="cod_client_editar" name="cod_client_editar" class="form-control" readonly/>'+
+                                '<input type="hidden" id="idDocModal" name="idDocModal">'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="loja">Loja: </label>'+
+                                '<input type="text" id="loja_editar" name="loja_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="nm_client">Nome do Cliente: </label>'+
+                                '<input type="text" id="nm_client_editar" name="nm_client_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="projeto">C&oacute;digo do Projeto: </label>'+
+                                '<input type="text" id="projeto_editar" name="projeto_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="nm_projeto">Nome do Projeto: </label>'+
+                                '<input type="text" id="nm_projeto_editar" name="nm_projeto_editar" class="form-control"readonly/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="codMatricula">Matr&iacute;cula: </label>'+
+                                '<input type="text" id="codMatricula_editar" name="codMatricula_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-sm-4">'+
+                                '<label for="nm_responsavel">Respons&aacute;vel: </label>'+
+                                '<input type="text" id="nm_responsavel_editar" name="nm_responsavel_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                                '<div class="col-sm-4">'+
+                                '<label for="emailCliente">E-Mail do Cliente: </label>'+
+                                '<input type="email" id="emailCliente_editar" name="emailCliente_editar" class="form-control" readonly/>'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label class="tProjeto">Tipo de projeto: </label>'+
+                                '<input type="text" name="tipo_projeto" id="tipo_projeto" class="form-control" readonly/>'+
+                                '</div>'+   
+                            '</div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-4">'+
+                                '<label for="horasPrev">Horas Previstas: </label>'+
+                                '<input type="number" id="horasPrev_editar" name="horasPrev_editar" class="form-control">'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="horasPrev">Horas Realizadas: </label>'+
+                                '<input type="number" id="horasRealiz_editar" name="horasRealiz_editar" class="form-control">'+
+                                '</div>'+
+                                '<div class="col-md-4">'+
+                                '<label for="status">Status: </label>'+                               
+                                '<select id="st_projeto_editar" class="form-control">'+
+                                '<option value="Ativo">Ativo</option>'+
+                                '<option value="Suspenso">Suspenso</option>'+
+                                '<option value="Encerrado">Encerrado</option>'+
+                                '</select>'+
+                                '</div>'+                              
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>',
             id: 'fluig-modaEditar',
             size: 'large',
             actions: [{
@@ -352,14 +341,88 @@ var MyWidget = SuperWidget.extend({
             if(err) {
                 // do error handling
             } else {
-                
+
+                $(document).on('click', '.icone', function(e) {
+                    e.preventDefault;
+                    tdobj = $(this).closest('tr').find('td');          
+
+                    var dataset = DatasetFactory.getDataset("FormControleMits", null, null, null);
+                    var idDocTabela = $($(e.currentTarget).parent().parent().parent().find("td")[0]).find('input[class^="id_documento"]').val();
+                    
+                    for(var i=0; i<dataset.values.length; i++){
+
+                        var campo1 = dataset.values[i]['documentid'];
+
+                        if(campo1 == idDocTabela){
+
+                            var campo2 = dataset.values[i]['cod_client'];
+                            var campo3 = dataset.values[i]['projeto'];
+                            var campo4 = dataset.values[i]['nm_projeto'];
+                            var campo5 = dataset.values[i]['nm_responsavel'];
+                            var campo6 = dataset.values[i]['emailCliente'];
+                            var campo7 = dataset.values[i]['st_projeto'];
+                            var campo8 = dataset.values[i]['loja'];
+                            var campo9 = dataset.values[i]['tipoProjeto'];
+                            var campo10 = dataset.values[i]['codMatricula'];
+                            var campo11 = dataset.values[i]['hr_previstas'];
+                            var campo12 = dataset.values[i]['hr_realizadas'];
+                            var campo13 = dataset.values[i]['nm_client'];
+                           
+                        }    
+
+                    }
+                                         
+                        $("#cod_client_editar").val(campo2)
+                        $("#projeto_editar").val(campo3)
+                        $("#nm_projeto_editar").val(campo4)
+                        $("#nm_responsavel_editar").val(campo5)
+                        $("#emailCliente_editar").val(campo6)
+                        $("#st_projeto_editar").val(campo7)
+                        $("#loja_editar").val(campo8)
+                        $("#codMatricula_editar").val(campo10)
+                        $("#horasPrev_editar").val(campo11)
+                        $("#horasRealiz_editar").val(campo12)
+                        $("#nm_client_editar").val(campo12)
+                        $("#tipo_projeto").val(campo9)
+                        $("#nm_client_editar").val(campo13)
+                        $("#idDocModal").val(campo1)
+
+                        $("button[data-editarProjeto]").on("click", function(){
+
+                            //Campos do Modal editar
+                            // var obj1 = $("#horasPrev_editar").val();
+                            // var obj2 = $("#horasRealiz_editar").val();
+                            // var obj3 = $("#st_projeto_editar").val();
+                            
+                            var idForm = $("#idDocModal").val();
+                            idForm = parseInt(idForm)
+
+                            console.log('ID do Documento    -  ' + idForm)
+
+                            //Propriedade Nome: Formulario de cadastro e valor do Modal Editar
+                            var tok = [{ "field": "hr_previstas", "value": $("#horasPrev_editar").val()},
+                                       { "field": "hr_realizadas", "value": $("#horasRealiz_editar").val()},
+                                       { "field": "st_projeto", "value": $("#st_projeto_editar").val()}];
+
+                            var c1 = DatasetFactory.createConstraint('cardId',idForm, idForm, ConstraintType.MUST);
+                            var c2 = DatasetFactory.createConstraint('cardData', JSON.stringify(tok), JSON.stringify(tok), ConstraintType.MUST);
+                            var dsUpdateProjetos = DatasetFactory.getDataset('ds_editarForm', null, new Array(c1, c2), null);
+        
+                            FLUIGC.toast({
+                                title: "Sucesso",
+                                message: 'Ajuste realizado com sucesso.',
+                                type: 'success',
+                                timeout: 10000
+                            });
+                        })
+              
+                });
+
                 
             }
         });        
     },
 
-
-   
 
     // Modal Documentos
     tabModal: function (){
@@ -367,7 +430,7 @@ var MyWidget = SuperWidget.extend({
         var myModalDoc = FLUIGC.modal({
             title: 'MIT',
             content: '<div class="tabModal" id="tabModal">'+
-                     '<input type="text" id="filtrar_tabela" name="filtrar_tabela"/>'+
+                     '<input type="hidden" id="filtrar_tabela" name="filtrar_tabela"/>'+
                      '<table id="tabelaModal" class="table table-striped table-bordered table-responsive">'+
                      '<thead>'+
                      '<tr class="info">'+
@@ -397,25 +460,72 @@ var MyWidget = SuperWidget.extend({
             if(err) {
                 // do error handling
             } else {
+                $(document).on('click', '.tabDoc', function(e) {
+                    e.preventDefault;
+                    tdobj = $(this).closest('tr').find('td'); 
 
-                var htmlTab2 = "";
-                var ds2 = DatasetFactory.getDataset('FormControleMits', null, null, null);
+                    var htmlTab2 = "";
+                    var ds2 = DatasetFactory.getDataset('FormControleMits', null, null, null);
+                    var idTabDoc = $($(e.currentTarget).parent().parent().find("td")[2]).find('input[class^="btnProjeto"]').val();
 
-                for (var i = 0; i < ds2.values.length; i++){
+                    for (var i = 0; i < ds2.values.length; i++){
 
-                    var id = ds2.values[i]['documentid'];
-                    var resp = ds2.values[i]['nm_projeto'];
-                    var mit = ds2.values[i]['controlMIT'];
+                        var resp = ds2.values[i]['nm_projeto'];
+                        
+                        if(resp == idTabDoc){
+                            
+                            var id = ds2.values[i]['documentid'];
+                            var mit = ds2.values[i]['controlMIT'];
 
-                    htmlTab2 += "<tr>"+
-                                '<td><input type="checkbox" class="cbxSelect" name="cbxSelect___' + i + '" value="' + id + '"></td>' +
-                                "<td><button type='button' class='btn-link' data-visualizarDoc>" + mit +"</td>" +
-                                "<td>" + resp +"</td>"+
-                                "</tr>";
-            
-                }
+                            htmlTab2 += "<tr>"+
+                            '<td><input type="checkbox" class="cbxSelect" name="cbxSelect" value="' + id + '"></td>' +
+                            "<td><button type='button' class='btn-link' data-visualizarDoc>" + mit +"</td>" +
+                            "<td>" + resp +"</td>"+
+                            "</tr>";
+                            
+                        }
 
-                document.getElementById("tbodyModal").innerHTML = htmlTab2;
+                    }
+
+                    document.getElementById("tbodyModal").innerHTML = htmlTab2;
+                });
+
+                $("button[data-excluir]").on("click", function(){
+
+                    var classCkbSelect = document.getElementsByClassName('cbxSelect');
+                    
+                    for (var i = 0; i < classCkbSelect.length; i++) {
+
+                        if (classCkbSelect[i].checked == true) {
+                            
+                            var c1 = DatasetFactory.createConstraint('documentid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
+                            var datasetFormControleMits = DatasetFactory.getDataset('formControleMits', null, new Array(c1), null);
+
+                            if (datasetFormControleMits.values[0].IdDocumSign == "0") {
+    
+                                var c1 = DatasetFactory.createConstraint('cardId', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
+                                var dsDeleteCard = DatasetFactory.getDataset('dsDeleteCard', null, new Array(c1), null);
+                
+                                FLUIGC.toast({
+                                    title: "Sucesso",
+                                    message: 'Registro eliminado com sucesso.',
+                                    type: 'success',
+                                    timeout: 10000
+                                });
+                            }
+                            else {
+                                FLUIGC.toast({
+                                    title: "Erro",
+                                    message: 'O documento já foi para o Totvs Sign.',
+                                    type: 'danger',
+                                    timeout: 50000
+                                });
+                            }
+                        }
+                    }
+                });
+                
+
             }
         });
         
@@ -459,6 +569,20 @@ var MyWidget = SuperWidget.extend({
             title: 'Gráficos',
             content: '<div id="MY_SELECTOR">'+
                      '<canvas id="set_an_id_for_my_chart"  width="700" height="200"></canvas>'+
+                     '<div id="divProgresso"'+
+                     '<div class="col-md-4">'+
+                     '<label for="hPrevistas">Horas Previstas;</label>'+
+                     '<input type="number" id="horasPrevistas" class="form-control"/>'+
+                     '</div>'+
+                     '<div class="col-md-4">'+
+                     '<label for="hPrevistas">Horas Realizadas:</label>'+
+                     '<input type="number" id="horasRalizadas" class="form-control"/>'+
+                     '</div>'+
+                     '<div class="col-md-4">'+
+                     '<label for="hPrevistas">Progresso:</label>'+
+                     '<input type="text" id="progresso" class="form-control"/>'+
+                     '</div>'+
+                     '</div>'+
                      '</div>',
             id: 'fluig-modal',
             size: 'large',
@@ -528,9 +652,7 @@ var MyWidget = SuperWidget.extend({
         document.getElementById('emailCliente').value = "";
         document.getElementById('loja').value = "";
         document.getElementById('tipoProjetoP').checked = true;
-        document.getElementById('controlMIT').value = "";
-        document.getElementById('st_projeto').value = "0";
-        myTagAutocomplete.remove(states);
+        document.getElementById('controlMIT').value = "";    
 
     },
 
@@ -653,8 +775,16 @@ var MyWidget = SuperWidget.extend({
                 '<value>' + document.getElementById('loja').value + '</value>' +
                 '</cardData>1' +
                 '<cardData>' +
-                '<field>Status</field>' +
+                '<field>st_projeto</field>' +
                 '<value>' + document.getElementById('st_projeto').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>hr_previstas</field>' +
+                '<value>' + document.getElementById('hr_previstas').value + '</value>' +
+                '</cardData>1' +
+                '<cardData>' +
+                '<field>hr_realizadas</field>' +
+                '<value>' + document.getElementById('hr_realizadas').value + '</value>' +
                 '</cardData>1' +
                 '<cardData>' +
                 '<field>codMatricula</field>' +
@@ -724,35 +854,7 @@ var MyWidget = SuperWidget.extend({
 
     fnDel: function () {
        
-        var classCkbSelect = document.getElementsByClassName('cbxSelect');
-        console.log(classCkbSelect)
-        for (var i = 0; i < classCkbSelect.length; i++) {
-            if (classCkbSelect[i].checked == true) {
-                var c1 = DatasetFactory.createConstraint('documentid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
-                var datasetFormControleMits = DatasetFactory.getDataset('FormControleMits', null, new Array(c1), null);
-    
-                if (datasetFormControleMits.values[0].IdDocumSign == "0") {
-                    //fnDelete(classCkbSelect[i].value);
-                    var c1 = DatasetFactory.createConstraint('cardid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
-                    var dsDeleteCard = DatasetFactory.getDataset('dsDeleteCard', null, new Array(c1), null);
-    
-                    FLUIGC.toast({
-                        title: "Sucesso",
-                        message: 'Registro eliminado com sucesso.',
-                        type: 'success',
-                        timeout: 10000
-                    });
-                }
-                else {
-                    FLUIGC.toast({
-                        title: "Erro",
-                        message: 'O documento já foi para o Totvs Sign.',
-                        type: 'danger',
-                        timeout: 50000
-                    });
-                }
-            }
-        }
+        
 
         this.getArrayProject();
     },
