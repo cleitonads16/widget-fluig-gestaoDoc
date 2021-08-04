@@ -23,9 +23,6 @@ var MyWidget = SuperWidget.extend({
             }).hide();
         });
 
-        setTimeout(function(){
-            console.log('TIMEOUT')
-        },3000)
 
     },
 
