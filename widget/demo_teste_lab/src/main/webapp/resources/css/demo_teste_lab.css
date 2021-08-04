@@ -1,0 +1,68 @@
+/* Coloque aqui seu codigo CSS */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divLoading,
+.tabModal {
+    /* height    : auto; */
+    overflow-y: auto;
+    width     : 100%;
+    border    : 5px solid white;
+    max-height: 250vw;
+    height    : 300px;
+}
+
+table {
+    width          : 100%;
+    border-collapse: collapse;
+    border         : 1px solid black;
+    text-align     : center;
+    table-layout   : fixed;
+
+}
+
+td,
+th {
+    border       : 1px solid black;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+}
+
+/* th {
+    position: sticky;
+    top     : 0;
+} */
+
+.modal {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+    .modal:before {
+        display       : inline-block;
+        vertical-align: middle;
+        content       : " ";
+        height        : 100%;
+    }
+}
+
+.modal-dialog {
+    display       : inline-block;
+    text-align    : left;
+    vertical-align: middle;
+}
+
+i {
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.btn-link {
+    white-space: normal;
+    word-wrap  : break-word;
+}
