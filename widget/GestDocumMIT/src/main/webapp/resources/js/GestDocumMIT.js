@@ -850,15 +850,7 @@ var MyWidget = SuperWidget.extend({
                 sel[i].checked = false;
             }
         }
-    },
-
-    fnDel: function () {
-       
-        
-
-        this.getArrayProject();
-    },
-
+    }
     
 });
 
