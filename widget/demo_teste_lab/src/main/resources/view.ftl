@@ -1,7 +1,7 @@
 <div id="MyWidget_${instanceId}" class="super-widget wcm-widget-class fluig-style-guide" data-params="MyWidget.instance()">
 	<div id="div_principal" class="container-fluid">
 		<form>
-			<h3 for="listaAtividades">Lista de Atividades</h3>
+			<h3 for="listaAtividades">Cadastrar Novo Projeto</h3>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
@@ -14,34 +14,90 @@
                             <input type="text" id="data_${instanceId}" name="nomCoord" class="form-control" readonly>
                         </div>
                     </div><br>
-                    <div class="row">
-                        <div class="col-md-3" style="width: -5px">
-                            <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>&nbsp;&nbsp;&nbsp;
-                            <button type="button" id="btRefresh" class="btn btn-default" data-refresh>Atualizar</button>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="form-group has-feedback">
-                                <input type="text" id="campFiltro" name="campFiltro" class="form-control" placeholder="Digite o dado da tabela que deseja filtrar">
-                                <i class="fluigicon fluigicon-search form-control-feedback"></i>
+                    <div class="divCadastro" id="divCadastro">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="cod_client">C&oacute;digo do Cliente:</label>
+                                        <input type="text" id="cod_client" name="cod_client" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nm_client">Nome do Cliente:</label>
+                                        <input type="text" id="nm_client" name="nm_client" class="form-control"/>
+                                    </div>
+                                    <div class="clearfix visible-xs-block"></div>
+                                    <div class="col-md-2">
+                                        <label for="projeto">C&oacute;digo do Projeto:</label>
+                                        <input type="text" id="projeto" name="projeto" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-4">
+                                        <label for="nm_projeto">Nome do Projeto:</label>
+                                        <input type="text" id="nm_projeto" name="nm_projeto" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="nm_responsavel">Respons&aacute;vel:</label>
+                                        <input type="text" id="nm_responsavel" name="nm_responsavel" class="form-control"/>
+                                    </div>
+                                    <div class="clearfix visible-xs-block"></div>
+                                    <div class="col-md-4">
+                                        <label for="emailCliente">E-Mail do Cliente:</label>
+                                        <input type="email" id="emailCliente" name="emailCliente" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-4">
+                                        <label for="stProjeto">Status do Projeto:</label>
+                                        <select id="st_projeto" class="form-control">
+                                            <option value="selecione">Selecione</option>
+                                            <option value="Ativo">Ativo</option>
+                                            <option value="Suspenso">Suspenso</option>
+                                            <option value="Encerrado">Encerrado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="loja">Loja:</label>
+                                        <input type="text" id="loja" name="loja" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="dimenc">Selecione o Dimencionamento do Projeto:</label>
+                                        <select id="tipoProjeto" class="form-control">
+                                            <option value="selecione">Selecione</option>
+                                            <option value="P">Pequeno</option>
+                                            <option value="M">Médio</option>
+                                            <option value="G">Grande</option>
+                                            <option value="MIT">MIT</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="controlMIT">MIT:</label>
+                                        <input type="text" id="controlMIT" name="controlMIT" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-4">
+                                        <label for="codMatricula">Matr&iacute;cula:</label>
+                                        <input type="text" id="codMatricula" name="codMatricula" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="horasPrev">Horas Previstas:</label>
+                                        <input type="text" name="hr_previstas" id="hr_previstas" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="horasPrev">Horas Realizadas:</label>
+                                        <input type="text" name="hr_realizadas" id="hr_realizadas" class="form-control"/>
+                                    </div>
+                                </div><br>
+                                <div class="row space">
+                                    <div class="col-md-12">
+                                        <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>&nbsp;&nbsp;&nbsp;
+                                        <button type="button" id="btVisu" class="btn btn-default" data-visualizar>Visualizar Projetos Inseridos</button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="divLoading" id="divLoading">
-                            <table class="table table-bordered table-responsive" id="tnProjClient">
-                                <thead class="scroll-thead">
-                                    <tr>
-                                        <th><b>Cliente</b></th>
-                                        <th><b>Código Projeto</b></th>
-                                        <th><b>Nome do Projeto</b></th>
-                                        <th><b>Respons&aacute;vel</b></th>
-                                        <th><b>Status</b></th>
-                                        <th><b>Editar</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="arrayProj" class="scroll-tbody-y table-body"></tbody>
-                            </table>
-                        </div>
+                        </div>       
                     </div>
                 </div>
             </div>

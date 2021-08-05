@@ -4,15 +4,12 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.divLoading,
-.tabModal {
-    /* height    : auto; */
+/* .divLoading {
+    height    : auto;
     overflow-y: auto;
     width     : 100%;
     border    : 5px solid white;
-    max-height: 250vw;
-    height    : 300px;
-}
+} */
 
 table {
     width          : 100%;
@@ -30,29 +27,6 @@ th {
     text-overflow: ellipsis;
 }
 
-/* th {
-    position: sticky;
-    top     : 0;
-} */
-
-.modal {
-    text-align: center;
-}
-
-@media screen and (min-width: 768px) {
-    .modal:before {
-        display       : inline-block;
-        vertical-align: middle;
-        content       : " ";
-        height        : 100%;
-    }
-}
-
-.modal-dialog {
-    display       : inline-block;
-    text-align    : left;
-    vertical-align: middle;
-}
 
 i {
     cursor: pointer;
@@ -65,4 +39,8 @@ button:hover {
 .btn-link {
     white-space: normal;
     word-wrap  : break-word;
+}
+
+.space {
+    padding-top: 15px;
 }

@@ -16,5 +16,6 @@ locale.file.base.name=demo_teste_lab
 application.resource.js.1=/resources/js/demo_teste_lab.js
 application.resource.js.2=/resources/js/vcXMLRPC.js
 application.resource.js.3=/resources/js/Chart.bundle.js
-application.resource.css.2=/resources/css/demo_teste_lab.css
+application.resource.css.4=/resources/css/demo_teste_lab.css
+
 
