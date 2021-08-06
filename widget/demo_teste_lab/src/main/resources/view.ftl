@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="row space">
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="stProjeto">Status do Projeto:</label>
                                         <select id="st_projeto" class="form-control">
                                             <option value="selecione">Selecione</option>
@@ -71,7 +71,7 @@
                                             <option value="MIT">MIT</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label for="controlMIT">MIT:</label>
                                         <input type="text" id="controlMIT" name="controlMIT" class="form-control"/>
                                     </div>
@@ -93,7 +93,7 @@
                                 <div class="row space">
                                     <div class="col-md-12">
                                         <button type="button" id="btAdd" class="btn btn-success" data-adicionar>Adicionar Novo Projeto</button>&nbsp;&nbsp;&nbsp;
-                                        <button type="button" id="btVisu" class="btn btn-default" data-visualizar>Visualizar Projetos Inseridos</button>
+                                        <button type="button" id="btVisu" class="btn btn-info" data-visualizar>Visualizar Projetos Inseridos</button>
                                     </div>
                                 </div>
                             </div>

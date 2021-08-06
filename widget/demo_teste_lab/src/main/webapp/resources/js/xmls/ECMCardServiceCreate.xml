@@ -1,0 +1,65 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">
+   <soapenv:Header></soapenv:Header>
+   <soapenv:Body>
+      <ws:create>
+         <companyId></companyId>
+         <username></username>
+         <password></password>
+         <card>         
+            <item>
+               <attachs></attachs>            
+               <cardData>
+                  <field>cod_client</field>
+                  <value name="cod_client"></value>
+               </cardData>
+               <cardData>
+                  <field>nm_client</field>
+                  <value name="nm_client"></value>
+               </cardData>
+               <cardData>
+                  <field>projeto</field>
+                  <value name="projeto"></value>
+               </cardData>
+               <cardData>
+                  <field>nm_projeto</field>
+                  <value name="nm_projeto"></value>
+               </cardData>
+               <cardData>
+                  <field>nm_responsavel</field>
+                  <value name="nm_responsavel"></value>
+               </cardData>
+               <cardData>
+                  <field>emailCliente</field>
+                  <value name="emailCliente"></value>
+               </cardData>
+               <cardData>
+                  <field>loja</field>
+                  <value name="loja"></value>
+               </cardData>
+               <cardData>
+                  <field>st_projeto</field>
+                  <value name="st_projeto"></value>
+               </cardData>
+   				<cardData>
+                  <field>hr_previstas</field>
+                  <value name="hr_previstas"></value>
+               </cardData>
+   				<cardData>
+                  <field>hr_realizadas</field>
+                  <value name="hr_realizadas"></value>
+               </cardData>
+   				<cardData>
+                  <field>codMatricula</field>
+                  <value name="codMatricula"></value>
+               </cardData> 
+               <colleagueId>cleitonads</colleagueId>
+               <docapprovers></docapprovers>                                         
+               <docsecurity></docsecurity>                        
+               <expires>false</expires>            
+               <parentDocumentId>1144</parentDocumentId>
+               <reldocs></reldocs>
+            </item>
+         </card>
+      </ws:create>
+   </soapenv:Body>
+</soapenv:Envelope>

@@ -25,7 +25,7 @@ var MyWidget = SuperWidget.extend({
         local: {
             
             'visualizar' : ['click_visualizarProjetos'],
-            'adicionar'  : ['click_inserirProjeto','click_getEmpty'],
+            'adicionar'  : ['click_inserirProjeto'/*,'click_getEmpty'*/],
         },
         global: {
             'documento'  : ['click_modal'],
@@ -121,7 +121,7 @@ var MyWidget = SuperWidget.extend({
                         var html = "";
 
                         html += "<tr class='tr_class'>"+
-                        '<td><input type="checkbox" id="lblPrinc" data-checkboxTb><input type="hidden" class="id_documento" value="' + c6 + '"/></td>'+
+                        '<td><input type="checkbox" class="cbxSelect" data-checkboxTb><input type="hidden" class="id_documento" value="' + c6 + '"/></td>'+
                         "<td>" + c1 + "</td>"+
                         "<td>" + c2 +"</td>" +
                         "<td class='btnProjeto'><abbr title='Gráfico'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"</button></abbr><input type='hidden' class='btnProjeto' value='" + c3 +"'/></td>" +
@@ -185,7 +185,7 @@ var MyWidget = SuperWidget.extend({
         $("#hr_previstas").val(clearInput)
         $("#hr_realizadas").val(clearInput)
         $("#codMatricula").val(clearInput)
-        $("#tipoProjeto").val(clearSelect)
+        $("#st_projeto").val(clearSelect)
 
     },
 
@@ -260,11 +260,11 @@ var MyWidget = SuperWidget.extend({
                 tipo = dimencProjeto;
                 break;
             case 'M':
-                qtProjeto = mitP.length;
+                qtProjeto = mitM.length;
                 tipo = dimencProjeto;
                 break;
             case 'G':
-                qtProjeto = mitP.length;
+                qtProjeto = mitG.length;
                 tipo = dimencProjeto;
                 break;
             case 'MIT':
@@ -294,6 +294,51 @@ var MyWidget = SuperWidget.extend({
             }
     
             console.log("PROJETO INSERIDO:  " + qtProjeto)
+
+            var $xml = null
+            $.ajax({
+                url: "WCM/wcm/widget/demo_teste_lab/src/main/webapp/resources/js/xmls/ECMCardServiceCreate.xml",
+                async: false,
+                type: "get",
+                datetype: "xml",
+                success: function (xml){
+                    $xml = $(xml)
+                }
+            })
+
+           
+            // Altera os valores recuperados nas variaveis
+            $xml.find("companyId").text(1)
+            $xml.find("username").text("academy.aluno")
+            $xml.find("password").text("academy.aluno")
+
+            // Campos
+            $xml.find("[name='cod_client']").text(codigo)
+            $xml.find("[name='nm_client']").text(cliente)
+            $xml.find("[name='projeto']").text(projeto)
+            $xml.find("[name='nm_projeto']").text(mn_projeto)
+            $xml.find("[name='nm_responsavel']").text(responsavel)
+            $xml.find("[name='emailCliente']").text(email)
+            $xml.find("[name='loja']").text(loja)
+            $xml.find("[name='st_projeto']").text(status)
+            $xml.find("[name='hr_previstas']").text(horasPrev)
+            $xml.find("[name='hr_realizadas']").text(horasRealiz)
+            $xml.find("[name='codMatricula']").text(matricula)
+            
+            console.log("XML" + $xml)
+            console.log($xml[0])
+            console.log(WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl')
+
+            WCMAPI.Create({
+                url: '/webdesk/ECMCardService?wsdl',
+                contentType: "text/xml",
+                dataType: "xml",
+                data: $xml[0],
+                success: function(data){
+                    console.log("CHAMOU O SERVIÇO COM SUCESSO")
+                }
+            });
+            
         }
     
     },
