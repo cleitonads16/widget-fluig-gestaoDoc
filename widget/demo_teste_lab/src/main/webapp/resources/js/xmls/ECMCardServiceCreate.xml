@@ -2,9 +2,9 @@
    <soapenv:Header></soapenv:Header>
    <soapenv:Body>
       <ws:create>
-         <companyId></companyId>
-         <username></username>
-         <password></password>
+         <companyId>1</companyId>
+         <username>academy.aluno</username>
+         <password>academy.aluno</password>
          <card>         
             <item>
                <attachs></attachs>            

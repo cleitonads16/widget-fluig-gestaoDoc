@@ -25,12 +25,14 @@ var MyWidget = SuperWidget.extend({
         local: {
             
             'visualizar' : ['click_visualizarProjetos'],
-            'adicionar'  : ['click_inserirProjeto'/*,'click_getEmpty'*/],
+            'adicionar'  : ['click_inserirProjeto','click_getEmpty'],
         },
         global: {
-            'documento'  : ['click_modal'],
-            'visualizarDoc': ['click_visualizar'],
-            'editarProj'   : ['click_modalEditar'],
+            'documento'      : ['click_modal'],
+            'visualizarDoc'  : ['click_visualizar'],
+            'editarProj'     : ['click_modalEditar'],
+            'excluirProjeto' : ['click_excluirProjetos']
+            
         }
     },
 
@@ -55,6 +57,7 @@ var MyWidget = SuperWidget.extend({
                                         '<th><b>Cliente</b></th>'+
                                         '<th><b>Código Projeto</b></th>'+
                                         '<th><b>Nome do Projeto</b></th>'+
+                                        '<th><b>Documentos</b></th>'+
                                         '<th><b>Respons&aacute;vel</b></th>'+
                                         '<th><b>Status</b></th>'+
                                         '<th><b>Editar</b></th>'+
@@ -69,8 +72,7 @@ var MyWidget = SuperWidget.extend({
             size: 'full',
             actions: [{
                 'label': 'Excluir',
-                'bind': 'data-cadastrar-MIT',
-                'autoClose': true
+                'bind': 'data-excluirProjeto',
             },{
                 'label': 'Fechar',
                 'autoClose': true
@@ -92,6 +94,7 @@ var MyWidget = SuperWidget.extend({
                     var nomeProjeto = ds.values[i]['nm_projeto'];
                     var nomeResponsavel = ds.values[i]['nm_responsavel'];
                     var status = ds.values[i]['st_projeto'];
+                    var documento = ds.values[i]['controlMIT'];
 
                     // Insere dados em nova array
                     arr.push({
@@ -100,7 +103,8 @@ var MyWidget = SuperWidget.extend({
                         projeto: codProjeto,
                         nProjeto: nomeProjeto,
                         responsavel: nomeResponsavel,
-                        stausProjeto: status
+                        stausProjeto: status,
+                        docMit: documento
                     })
 
                     //Filtrando os dados repetidos
@@ -117,14 +121,16 @@ var MyWidget = SuperWidget.extend({
                         var c4 = item.responsavel;
                         var c5 = item.stausProjeto;
                         var c6 = item.id;
+                        var c7 = item.docMit;
 
                         var html = "";
 
                         html += "<tr class='tr_class'>"+
-                        '<td><input type="checkbox" class="cbxSelect" data-checkboxTb><input type="hidden" class="id_documento" value="' + c6 + '"/></td>'+
+                        '<td><input type="checkbox" class="cbxSelect" value="'+ c6 +'" data-checkboxTb><input type="hidden" class="id_documento" value="' + c6 + '"/></td>'+
                         "<td>" + c1 + "</td>"+
                         "<td>" + c2 +"</td>" +
                         "<td class='btnProjeto'><abbr title='Gráfico'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"</button></abbr><input type='hidden' class='btnProjeto' value='" + c3 +"'/></td>" +
+                        "<td>" + c7 +"</td>" +
                         "<td>" + c4 +"</td>" +
                         '<td>' + c5 +'</td>' +
                         '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md icone" data-editarProj></i></button></td>' +
@@ -163,9 +169,92 @@ var MyWidget = SuperWidget.extend({
                         }
                     }
                 })
-                
+               
+                 // excluir projeto
+                 /*$("button[data-excluirProjeto]").on("click", function(){
+
+                    var check = $(".cbxSelect")
+                    for(var i = 0; i < check.length; i++){
+
+                        if(check[i].checked == true){
+
+                            console.log("CHECKADO LINHA:  " + i + ' - ' + check[i].value)
+
+                            var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+                            var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                                            '<soapenv:Header/>'+
+                                            '<soapenv:Body>'+
+                                            '<ws:deleteCard>'+
+                                                '<companyId>1</companyId>'+
+                                                '<username>academy.aluno</username>'+
+                                                '<password>academy.aluno</password>'+
+                                                '<cardId>'+ check[i].value +'</cardId>'+
+                                            '</ws:deleteCard>'+
+                                            '</soapenv:Body>'+
+                                        '</soapenv:Envelope>';
+
+                            $.ajax({
+                                type: "POST",
+                                dataType: "xml",
+                                url: urlWsDelet,
+                                data: _xml2,
+                                crossDomain: true,
+                                success: function (data) {
+                                    console.log("DELETADO COM SUCESSO")
+                                },
+                                error: function (error) {
+                                    console.log("Resultado com erro da Aplicação = " + error);
+                                }
+                            });
+
+                        }   
+                        
+                    }
+                    
+                })*/
             }
         });        
+    },
+
+    // excluir projeto
+    excluirProjetos: function(){
+        var check = $(".cbxSelect")
+        // var check = document.querySelectorAll('td [type="checkbox"]:checked')
+
+        for(var i = 0; i < check.length; i++){
+            if(check[i].checked == true){
+                console.log("CHECKADO LINHA:  " + i + ' - ' + check[i].value)
+                var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+                var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                                '<soapenv:Header/>'+
+                                '<soapenv:Body>'+
+                                '<ws:deleteCard>'+
+                                    '<companyId>1</companyId>'+
+                                    '<username>academy.aluno</username>'+
+                                    '<password>academy.aluno</password>'+
+                                    '<cardId>'+ check[i].value +'</cardId>'+
+                                '</ws:deleteCard>'+
+                                '</soapenv:Body>'+
+                            '</soapenv:Envelope>';
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "xml",
+                    url: urlWsDelet,
+                    data: _xml2,
+                    crossDomain: true,
+                    success: function (data) {
+                        console.log("DELETADO COM SUCESSO")
+                        
+                    },
+                    error: function (error) {
+                        console.log("Resultado com erro da Aplicação = " + error);
+                    }
+                });
+
+            }   
+            
+        }
     },
 
     getEmpty: function() {
@@ -189,8 +278,8 @@ var MyWidget = SuperWidget.extend({
 
     },
 
+    // adicionar projeto
     inserirProjeto: function(){
-    // adicionar formulário
                     
         var codigo = $("#cod_client").val()
         var cliente = $("#nm_client").val()
@@ -203,7 +292,7 @@ var MyWidget = SuperWidget.extend({
         var horasPrev = $("#hr_previstas").val()
         var horasRealiz = $("#hr_realizadas").val()
         var matricula = $("#codMatricula").val()
-        var usuario = "cleitonads"
+        var tipo = $("#tipoProjeto").val()
 
         var mitDocum = "";
         var mitP = new Array();
@@ -295,54 +384,115 @@ var MyWidget = SuperWidget.extend({
     
             console.log("PROJETO INSERIDO:  " + qtProjeto)
 
-            var $xml = null
+            var _xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                        '<soapenv:Header></soapenv:Header>'+
+                        '<soapenv:Body>'+
+                        '<ws:create>'+
+                            '<companyId>1</companyId>'+
+                            '<username>academy.aluno</username>'+
+                            '<password>academy.aluno</password>'+
+                            '<card>'+         
+                                '<item>'+
+                                    '<attachs></attachs>'+            
+                                    '<cardData>'+
+                                    '<field>cod_client</field>'+
+                                    '<value>'+codigo+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>nm_client</field>'+
+                                    '<value>'+cliente+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>projeto</field>'+
+                                    '<value>'+projeto+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>nm_projeto</field>'+
+                                    '<value>'+mn_projeto+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>nm_responsavel</field>'+
+                                    '<value>'+responsavel+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>emailCliente</field>'+
+                                    '<value>'+email+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>loja</field>'+
+                                    '<value>'+loja+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>st_projeto</field>'+
+                                    '<value>'+status+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>hr_previstas</field>'+
+                                    '<value>'+horasPrev+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>hr_realizadas</field>'+
+                                    '<value>'+horasRealiz+'</value>'+
+                                    '</cardData>'+
+                                    '<cardData>'+
+                                    '<field>codMatricula</field>'+
+                                    '<value>'+matricula+'</value>'+
+                                    '</cardData>'+ 
+                                    '<cardData>'+
+                                    '<field>tipoProjeto</field>'+
+                                    '<value>'+tipo+'</value>'+
+                                    '</cardData>'+ 
+                                    '<cardData>'+
+                                    '<field>controlMIT</field>'+
+                                    '<value>'+mitDocum+'</value>'+
+                                    '</cardData>'+ 
+                                    '<colleagueId>cleitonads</colleagueId>'+
+                                    '<docapprovers></docapprovers>'+                                         
+                                    '<docsecurity></docsecurity>'+                        
+                                    '<expires>false</expires>'+            
+                                    '<parentDocumentId>28</parentDocumentId>'+
+                                    '<reldocs></reldocs>'+
+                                '</item>'+
+                            '</card>'+
+                        '</ws:create>'+
+                        '</soapenv:Body>'+
+                    '</soapenv:Envelope>';
+
+            var urlWs = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+
             $.ajax({
-                url: "WCM/wcm/widget/demo_teste_lab/src/main/webapp/resources/js/xmls/ECMCardServiceCreate.xml",
-                async: false,
-                type: "get",
-                datetype: "xml",
-                success: function (xml){
-                    $xml = $(xml)
-                }
-            })
-
-           
-            // Altera os valores recuperados nas variaveis
-            $xml.find("companyId").text(1)
-            $xml.find("username").text("academy.aluno")
-            $xml.find("password").text("academy.aluno")
-
-            // Campos
-            $xml.find("[name='cod_client']").text(codigo)
-            $xml.find("[name='nm_client']").text(cliente)
-            $xml.find("[name='projeto']").text(projeto)
-            $xml.find("[name='nm_projeto']").text(mn_projeto)
-            $xml.find("[name='nm_responsavel']").text(responsavel)
-            $xml.find("[name='emailCliente']").text(email)
-            $xml.find("[name='loja']").text(loja)
-            $xml.find("[name='st_projeto']").text(status)
-            $xml.find("[name='hr_previstas']").text(horasPrev)
-            $xml.find("[name='hr_realizadas']").text(horasRealiz)
-            $xml.find("[name='codMatricula']").text(matricula)
-            
-            console.log("XML" + $xml)
-            console.log($xml[0])
-            console.log(WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl')
-
-            WCMAPI.Create({
-                url: '/webdesk/ECMCardService?wsdl',
-                contentType: "text/xml",
+                type: "POST",
                 dataType: "xml",
-                data: $xml[0],
-                success: function(data){
-                    console.log("CHAMOU O SERVIÇO COM SUCESSO")
+                url: urlWs,
+                data: _xml,
+                crossDomain: true,
+                success: function (data) {
+                    if(mitDocum != "" && i == 0){
+                        FLUIGC.toast({
+                            title: "Sucesso",
+                            message: 'Projeto cadastrado com sucesso. Relação das MITs de acordo com o tamanho do projeto selecionado.',
+                            type: 'success',
+                            timeout: 10000
+                        });
+                    }
+                },
+                error: function (error) {
+                    if(mitDocum != "" && i == 0){
+                        FLUIGC.toast({
+                            title: "Erro ao adicionar a documentação",
+                            message: 'Verificar o problema na integração do ECMCardService.',
+                            type: 'danger',
+                            timeout: 50000
+                        });
+                        console.log("Resultado com erro da Aplicação = " + error);
+                    }
+                   
                 }
             });
             
         }
     
     },
-
 
     // Modal editar projetos
     modalEditar: function(){
