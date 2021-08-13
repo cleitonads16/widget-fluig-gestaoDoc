@@ -18,6 +18,7 @@ var MyWidget = SuperWidget.extend({
                 $("#controlMIT").prop('disabled', true);
             }
         })
+
     },
 
      //BIND de eventos
@@ -83,7 +84,7 @@ var MyWidget = SuperWidget.extend({
             } else {
                
                 // carrega dados de projetos inseridos tela
-                var ds = DatasetFactory.getDataset('ds_formDemoTesteLab', null, null, null);
+                var ds = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, null, null);
                 var arr = [];
 
                 for (var i = 0; i < ds.values.length; i++){
@@ -169,92 +170,72 @@ var MyWidget = SuperWidget.extend({
                         }
                     }
                 })
-               
-                 // excluir projeto
-                 /*$("button[data-excluirProjeto]").on("click", function(){
-
-                    var check = $(".cbxSelect")
-                    for(var i = 0; i < check.length; i++){
-
-                        if(check[i].checked == true){
-
-                            console.log("CHECKADO LINHA:  " + i + ' - ' + check[i].value)
-
-                            var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
-                            var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
-                                            '<soapenv:Header/>'+
-                                            '<soapenv:Body>'+
-                                            '<ws:deleteCard>'+
-                                                '<companyId>1</companyId>'+
-                                                '<username>academy.aluno</username>'+
-                                                '<password>academy.aluno</password>'+
-                                                '<cardId>'+ check[i].value +'</cardId>'+
-                                            '</ws:deleteCard>'+
-                                            '</soapenv:Body>'+
-                                        '</soapenv:Envelope>';
-
-                            $.ajax({
-                                type: "POST",
-                                dataType: "xml",
-                                url: urlWsDelet,
-                                data: _xml2,
-                                crossDomain: true,
-                                success: function (data) {
-                                    console.log("DELETADO COM SUCESSO")
-                                },
-                                error: function (error) {
-                                    console.log("Resultado com erro da Aplicação = " + error);
-                                }
-                            });
-
-                        }   
-                        
-                    }
-                    
-                })*/
+            
             }
         });        
     },
 
     // excluir projeto
     excluirProjetos: function(){
-        var check = $(".cbxSelect")
-        // var check = document.querySelectorAll('td [type="checkbox"]:checked')
+        
+        try {
 
-        for(var i = 0; i < check.length; i++){
-            if(check[i].checked == true){
+            var check = document.querySelectorAll('td [type="checkbox"]:checked')
+            var selecionado = document.getElementsByClassName('cbxSelect')
+
+            for(var i = 0; i < check.length; i++){
                 console.log("CHECKADO LINHA:  " + i + ' - ' + check[i].value)
-                var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
-                var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
-                                '<soapenv:Header/>'+
-                                '<soapenv:Body>'+
-                                '<ws:deleteCard>'+
-                                    '<companyId>1</companyId>'+
-                                    '<username>academy.aluno</username>'+
-                                    '<password>academy.aluno</password>'+
-                                    '<cardId>'+ check[i].value +'</cardId>'+
-                                '</ws:deleteCard>'+
-                                '</soapenv:Body>'+
-                            '</soapenv:Envelope>';
+                if(check[i].checked == true){
+                   
+                    var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+                    var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                                    '<soapenv:Header/>'+
+                                    '<soapenv:Body>'+
+                                    '<ws:deleteCard>'+
+                                        '<companyId>1</companyId>'+
+                                        '<username>academy.aluno</username>'+
+                                        '<password>academy.aluno</password>'+
+                                        '<cardId>'+ check[i].value +'</cardId>'+
+                                    '</ws:deleteCard>'+
+                                    '</soapenv:Body>'+
+                                '</soapenv:Envelope>';
+    
+                    $.ajax({
+                        type: "POST",
+                        dataType: "xml",
+                        url: urlWsDelet,
+                        data: _xml2,
+                        crossDomain: true,
+                        success: function (data) {
+                            if(i == 0){
+                                console.log(check.nodeList + " - " + i)
+                            }
+                           
+                            // FLUIGC.toast({
+                            //         title: '',
+                            //         message: "Os itens selecionados foram excluídos com sucesso",
+                            //         type: 'success'
+                            //     });
+                        },
+                        error: function (error) {}
+                    });
 
-                $.ajax({
-                    type: "POST",
-                    dataType: "xml",
-                    url: urlWsDelet,
-                    data: _xml2,
-                    crossDomain: true,
-                    success: function (data) {
-                        console.log("DELETADO COM SUCESSO")
-                        
-                    },
-                    error: function (error) {
-                        console.log("Resultado com erro da Aplicação = " + error);
-                    }
-                });
+                }
+    
+                check[i].parentNode.parentNode.remove()
+            }
 
-            }   
-            
+            console.log("Fora do Ajax   "+selecionado[0].checked)
+
+        } catch (error) {
+
+            FLUIGC.toast({
+                title: '',
+                message: "Erro ao tentar excluír item, Tipo:  " + error + "   ,entre em contato com o suporte Fluig para resolver o problema",
+                type: 'danger'
+            });
         }
+        
     },
 
     getEmpty: function() {
@@ -450,7 +431,7 @@ var MyWidget = SuperWidget.extend({
                                     '<docapprovers></docapprovers>'+                                         
                                     '<docsecurity></docsecurity>'+                        
                                     '<expires>false</expires>'+            
-                                    '<parentDocumentId>28</parentDocumentId>'+
+                                    '<parentDocumentId>124</parentDocumentId>'+
                                     '<reldocs></reldocs>'+
                                 '</item>'+
                             '</card>'+
@@ -584,7 +565,7 @@ var MyWidget = SuperWidget.extend({
                     e.preventDefault;
                     tdobj = $(this).closest('tr').find('td');          
                 
-                    var dataset = DatasetFactory.getDataset("ds_formDemoTesteLab", null, null, null);
+                    var dataset = DatasetFactory.getDataset("ds_formDemoTesteLab2", null, null, null);
                     var idDocTabela = $($(e.currentTarget).parent().parent().parent().find("td")[0]).find('input[class^="id_documento"]').val();
                   
                     for(var i=0; i<dataset.values.length; i++){
@@ -703,7 +684,7 @@ var MyWidget = SuperWidget.extend({
                     tdobj = $(this).closest('tr').find('td'); 
 
                     var htmlTab2 = "";
-                    var ds2 = DatasetFactory.getDataset('ds_formDemoTesteLab', null, null, null);
+                    var ds2 = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, null, null);
                     var idTabDoc = $($(e.currentTarget).parent().parent().find("td")[2]).find('input[class^="btnProjeto"]').val();
 
                     for (var i = 0; i < ds2.values.length; i++){
@@ -737,9 +718,9 @@ var MyWidget = SuperWidget.extend({
                         if (classCkbSelect[i].checked == true) {
                             
                             var c1 = DatasetFactory.createConstraint('documentid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
-                            var datasetds_formDemoTesteLab = DatasetFactory.getDataset('ds_formDemoTesteLab', null, new Array(c1), null);
+                            var datasetds_formDemoTesteLab2 = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, new Array(c1), null);
 
-                            if (datasetds_formDemoTesteLab.values[0].IdDocumSign == "0") {
+                            if (datasetds_formDemoTesteLab2.values[0].IdDocumSign == "0") {
     
                                 var c1 = DatasetFactory.createConstraint('cardId', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
                                 var dsDeleteCard = DatasetFactory.getDataset('dsDeleteCard', null, new Array(c1), null);
