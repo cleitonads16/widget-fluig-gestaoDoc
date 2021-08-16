@@ -84,8 +84,9 @@ var MyWidget = SuperWidget.extend({
             } else {
                
                 // carrega dados de projetos inseridos tela
-                var ds = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, null, null);
+                var ds = DatasetFactory.getDataset('ds_formDemoTesteLab', null, null, null);
                 var arr = [];
+                var html = "";
 
                 for (var i = 0; i < ds.values.length; i++){
                     
@@ -97,6 +98,7 @@ var MyWidget = SuperWidget.extend({
                     var status = ds.values[i]['st_projeto'];
                     var documento = ds.values[i]['controlMIT'];
 
+                    /*
                     // Insere dados em nova array
                     arr.push({
                         id: docId,
@@ -139,11 +141,22 @@ var MyWidget = SuperWidget.extend({
 
                         return html 
             
-                    });
+                    });*/
+
+                    html += "<tr class='tr_class'>"+
+                        '<td><input type="checkbox" class="cbxSelect" value="'+ docId +'" data-checkboxTb><input type="hidden" class="id_documento" value="' + docId + '"/></td>'+
+                        "<td>" + codClient + "</td>"+
+                        "<td>" + codProjeto +"</td>" +
+                        "<td class='btnProjeto'><abbr title='Gráfico'><button type='button' class='btn-link tabDoc' data-documento>" + nomeProjeto +"</button></abbr><input type='hidden' class='btnProjeto' value='" + nomeProjeto +"'/></td>" +
+                        "<td>" + documento +"</td>" +
+                        "<td>" + nomeResponsavel +"</td>" +
+                        '<td>' + status +'</td>' +
+                        '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md icone" data-editarProj></i></button></td>' +
+                        "</tr>";
                     
                 }
 
-                document.getElementById("arrayProj").innerHTML = tabMap.join('');
+                document.getElementById("arrayProj").innerHTML = html /*tabMap.join('');*/
 
                 //Filtar tabela
                 var $rows = $('#tnProjClient tr');
@@ -431,7 +444,7 @@ var MyWidget = SuperWidget.extend({
                                     '<docapprovers></docapprovers>'+                                         
                                     '<docsecurity></docsecurity>'+                        
                                     '<expires>false</expires>'+            
-                                    '<parentDocumentId>124</parentDocumentId>'+
+                                    '<parentDocumentId>28</parentDocumentId>'+
                                     '<reldocs></reldocs>'+
                                 '</item>'+
                             '</card>'+
@@ -551,7 +564,7 @@ var MyWidget = SuperWidget.extend({
             actions: [{
                 'label': 'Projeto Editado',
                 'bind': 'data-editarProjeto',
-                'autoClose': true
+                // 'autoClose': true
             },{
                 'label': 'Fechar',
                 'autoClose': true
@@ -565,7 +578,7 @@ var MyWidget = SuperWidget.extend({
                     e.preventDefault;
                     tdobj = $(this).closest('tr').find('td');          
                 
-                    var dataset = DatasetFactory.getDataset("ds_formDemoTesteLab2", null, null, null);
+                    var dataset = DatasetFactory.getDataset("ds_formDemoTesteLab", null, null, null);
                     var idDocTabela = $($(e.currentTarget).parent().parent().parent().find("td")[0]).find('input[class^="id_documento"]').val();
                   
                     for(var i=0; i<dataset.values.length; i++){
@@ -586,58 +599,99 @@ var MyWidget = SuperWidget.extend({
                             var campo11 = dataset.values[i]['hr_previstas'];
                             var campo12 = dataset.values[i]['hr_realizadas'];
                             var campo13 = dataset.values[i]['nm_client'];
+                            var campo14 = dataset.values[i]['documentid'];
                            
                         }    
 
                     }
                                          
-                        $("#cod_client_editar").val(campo2)
-                        $("#projeto_editar").val(campo3)
-                        $("#nm_projeto_editar").val(campo4)
-                        $("#nm_responsavel_editar").val(campo5)
-                        $("#emailCliente_editar").val(campo6)
-                        $("#st_projeto_editar").val(campo7)
-                        $("#loja_editar").val(campo8)
-                        $("#codMatricula_editar").val(campo10)
-                        $("#horasPrev_editar").val(campo11)
-                        $("#horasRealiz_editar").val(campo12)
-                        $("#nm_client_editar").val(campo12)
-                        $("#tipo_projeto").val(campo9)
-                        $("#nm_client_editar").val(campo13)
-                        $("#idDocModal").val(campo1)
-
-                        $("button[data-editarProjeto]").on("click", function(){
-
-                            //Campos do Modal editar
-                            // var obj1 = $("#horasPrev_editar").val();
-                            // var obj2 = $("#horasRealiz_editar").val();
-                            // var obj3 = $("#st_projeto_editar").val();
-                            
-                            var idForm = $("#idDocModal").val();
-                            idForm = parseInt(idForm)
-
-                            console.log('ID do Documento    -  ' + idForm)
-
-                            //Propriedade Nome: Formulario de cadastro e valor do Modal Editar
-                            var tok = [{ "field": "hr_previstas", "value": $("#horasPrev_editar").val()},
-                                       { "field": "hr_realizadas", "value": $("#horasRealiz_editar").val()},
-                                       { "field": "st_projeto", "value": $("#st_projeto_editar").val()}];
-
-                            var c1 = DatasetFactory.createConstraint('cardId',idForm, idForm, ConstraintType.MUST);
-                            var c2 = DatasetFactory.createConstraint('cardData', JSON.stringify(tok), JSON.stringify(tok), ConstraintType.MUST);
-                            var dsUpdateProjetos = DatasetFactory.getDataset('ds_editarForm', null, new Array(c1, c2), null);
-        
-                            FLUIGC.toast({
-                                title: "Sucesso",
-                                message: 'Ajuste realizado com sucesso.',
-                                type: 'success',
-                                timeout: 10000
-                            });
-                        })
-              
+                    $("#cod_client_editar").val(campo2)
+                    $("#projeto_editar").val(campo3)
+                    $("#nm_projeto_editar").val(campo4)
+                    $("#nm_responsavel_editar").val(campo5)
+                    $("#emailCliente_editar").val(campo6)
+                    $("#st_projeto_editar").val(campo7)
+                    $("#loja_editar").val(campo8)
+                    $("#codMatricula_editar").val(campo10)
+                    $("#horasPrev_editar").val(campo11)
+                    $("#horasRealiz_editar").val(campo12)
+                    $("#nm_client_editar").val(campo12)
+                    $("#tipo_projeto").val(campo9)
+                    $("#nm_client_editar").val(campo13)
+                    $("#idDocModal").val(campo14)  
+                                  
                 });
 
-                
+                // Edita os campos do Formuloario
+                $("button[data-editarProjeto]").on("click", function(){
+                    
+                    var dsEditar = DatasetFactory.getDataset("ds_formDemoTesteLab", null, null, null);
+                    var idModal = $("#idDocModal").val();
+                    console.log(idModal)
+                    
+                    for(var i=0; i<dsEditar.values.length; i++){
+
+                        var idFormEditar = dsEditar.values[i]['documentid'];
+
+                        if(idFormEditar == idModal){
+
+                            var editado1 = $("#horasPrev_editar").val()
+                            var editado2 = $("#horasRealiz_editar").val()
+                            var editado3 =  $("#st_projeto_editar").val()
+
+                            var _xml3 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                                        '<soapenv:Header/>'+
+                                        '<soapenv:Body>'+
+                                        '<ws:updateCardData>'+
+                                            '<companyId>1</companyId>'+
+                                            '<username>academy.aluno</username>'+
+                                            '<password>academy.aluno</password>'+
+                                            '<cardId>'+ idFormEditar +'</cardId>'+
+                                            '<cardData>'+
+                                                '<item>'+                                     
+                                                    '<field>hr_previstas</field>'+                                       
+                                                    '<value>' + editado1 + '</value>'+
+                                                '</item>'+
+                                                '<item>'+            
+                                                    '<field>hr_realizadas</field>'+             
+                                                    '<value>' + editado2 + '</value>'+
+                                                '</item>'+
+                                                '<item>'+            
+                                                    '<field>st_projeto</field>'+             
+                                                    '<value>' + editado3 + '</value>'+
+                                                '</item>'+
+                                            '</cardData>'+
+                                        '</ws:updateCardData>'+
+                                        '</soapenv:Body>'+
+                                    '</soapenv:Envelope>';
+
+                            var urlWsEditar = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+
+                            $.ajax({
+                                type: "POST",
+                                dataType: "xml",
+                                url: urlWsEditar,
+                                data: _xml3,
+                                crossDomain: true,
+                                success: function (data) {
+                                    FLUIGC.toast({
+                                        title: "Sucesso",
+                                        message: 'Cadastro Editado.',
+                                        type: 'success',
+                                    });
+                                },
+                                error: function (error) {
+                                    FLUIGC.toast({
+                                        title: "Erro",
+                                        message: error + ' ao tentar editar o cadastro',
+                                        type: 'danger',
+                                    });
+                                }
+                            }); 
+                        }
+                    }
+
+                })
             }
         });        
     },
@@ -684,7 +738,7 @@ var MyWidget = SuperWidget.extend({
                     tdobj = $(this).closest('tr').find('td'); 
 
                     var htmlTab2 = "";
-                    var ds2 = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, null, null);
+                    var ds2 = DatasetFactory.getDataset('ds_formDemoTesteLab', null, null, null);
                     var idTabDoc = $($(e.currentTarget).parent().parent().find("td")[2]).find('input[class^="btnProjeto"]').val();
 
                     for (var i = 0; i < ds2.values.length; i++){
@@ -718,9 +772,9 @@ var MyWidget = SuperWidget.extend({
                         if (classCkbSelect[i].checked == true) {
                             
                             var c1 = DatasetFactory.createConstraint('documentid', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
-                            var datasetds_formDemoTesteLab2 = DatasetFactory.getDataset('ds_formDemoTesteLab2', null, new Array(c1), null);
+                            var datasetds_formDemoTesteLab = DatasetFactory.getDataset('ds_formDemoTesteLab', null, new Array(c1), null);
 
-                            if (datasetds_formDemoTesteLab2.values[0].IdDocumSign == "0") {
+                            if (datasetds_formDemoTesteLab.values[0].IdDocumSign == "0") {
     
                                 var c1 = DatasetFactory.createConstraint('cardId', classCkbSelect[i].value, classCkbSelect[i].value, ConstraintType.MUST);
                                 var dsDeleteCard = DatasetFactory.getDataset('dsDeleteCard', null, new Array(c1), null);
