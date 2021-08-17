@@ -26,7 +26,7 @@ var MyWidget = SuperWidget.extend({
         local: {
             
             'visualizar' : ['click_visualizarProjetos'],
-            'adicionar'  : ['click_inserirProjeto','click_getEmpty'],
+            'adicionar'  : ['click_validarCampos' /*'click_inserirProjeto','click_getEmpty'*/],
         },
         global: {
             'documento'      : ['click_modal'],
@@ -97,51 +97,6 @@ var MyWidget = SuperWidget.extend({
                     var nomeResponsavel = ds.values[i]['nm_responsavel'];
                     var status = ds.values[i]['st_projeto'];
                     var documento = ds.values[i]['controlMIT'];
-
-                    /*
-                    // Insere dados em nova array
-                    arr.push({
-                        id: docId,
-                        cliente: codClient,
-                        projeto: codProjeto,
-                        nProjeto: nomeProjeto,
-                        responsavel: nomeResponsavel,
-                        stausProjeto: status,
-                        docMit: documento
-                    })
-
-                    //Filtrando os dados repetidos
-                    arr = arr.filter(function (a) {
-                        return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
-                    }, Object.create(null))
-
-                    // Mapeia os dados filtrados e insere em tabela
-                    var tabMap = arr.map(function(item, indice){
-
-                        var c1 = item.cliente;
-                        var c2 = item.projeto;
-                        var c3 = item.nProjeto;
-                        var c4 = item.responsavel;
-                        var c5 = item.stausProjeto;
-                        var c6 = item.id;
-                        var c7 = item.docMit;
-
-                        var html = "";
-
-                        html += "<tr class='tr_class'>"+
-                        '<td><input type="checkbox" class="cbxSelect" value="'+ c6 +'" data-checkboxTb><input type="hidden" class="id_documento" value="' + c6 + '"/></td>'+
-                        "<td>" + c1 + "</td>"+
-                        "<td>" + c2 +"</td>" +
-                        "<td class='btnProjeto'><abbr title='Gráfico'><button type='button' class='btn-link tabDoc' data-documento>" + c3 +"</button></abbr><input type='hidden' class='btnProjeto' value='" + c3 +"'/></td>" +
-                        "<td>" + c7 +"</td>" +
-                        "<td>" + c4 +"</td>" +
-                        '<td>' + c5 +'</td>' +
-                        '<td><button type="button" class="btn-link"><i class="fluigicon fluigicon-community-edit icon-md icone" data-editarProj></i></button></td>' +
-                        "</tr>";
-
-                        return html 
-            
-                    });*/
 
                     html += "<tr class='tr_class'>"+
                         '<td><input type="checkbox" class="cbxSelect" value="'+ docId +'" data-checkboxTb><input type="hidden" class="id_documento" value="' + docId + '"/></td>'+
@@ -286,7 +241,7 @@ var MyWidget = SuperWidget.extend({
         var horasPrev = $("#hr_previstas").val()
         var horasRealiz = $("#hr_realizadas").val()
         var matricula = $("#codMatricula").val()
-        var tipo = $("#tipoProjeto").val()
+        var tipo = $("#tipoProjeto").val()  
 
         var mitDocum = "";
         var mitP = new Array();
@@ -486,6 +441,8 @@ var MyWidget = SuperWidget.extend({
             
         }
     
+        this.getEmpty()
+
     },
 
     // Modal editar projetos
@@ -698,7 +655,7 @@ var MyWidget = SuperWidget.extend({
 
 
     // Modal Documentos
-    tabModal: function (){
+    /*tabModal: function (){
 
         var myModalDoc = FLUIGC.modal({
             title: 'MIT',
@@ -802,12 +759,9 @@ var MyWidget = SuperWidget.extend({
             }
         });
         
-    },
+    },*/
 
     
-
-    
-
     //Visualizacao de documentos
     visualizar: function(){
         
@@ -906,13 +860,124 @@ var MyWidget = SuperWidget.extend({
         });
     },
 
-    
-    
-    fnRefresh: function (){
+    // valida os campos
+    validarCampos: function(){
+        var codCliente = $("#cod_client").val()
+        var nmCliente = $("#nm_client").val()
+        var codProjeto = $("#projeto").val()
+        var mnProjeto = $("#nm_projeto").val()
+        var mnResponsavel = $("#nm_responsavel").val()
+        var emailCliente = $("#emailCliente").val()
+        var statusProjeto = $("#st_projeto").val()
+        var numLoja = $("#loja").val()
+        var tipoProjeto = $("#tipoProjeto").val()
+        var documentoMit = $("#controlMIT").val()
+        var codMatricula = $("#codMatricula").val()
+        var hrPrevistas = $("#hr_previstas").val()
+        var hrRealizadas = $("#hr_realizadas").val()
+        var validar = ""
 
-        var myLoading1 = FLUIGC.loading('#tnProjClient');
-        myLoading1.show();
-        myLoading1.hide();
+        switch(validar){
+            case codCliente:
+                FLUIGC.message.alert({
+                    message: 'O campo Código do Cliente está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case nmCliente:
+                FLUIGC.message.alert({
+                    message: 'O campo Nome do Cliente está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case codProjeto:
+                FLUIGC.message.alert({
+                    message: 'O campo Código do Projeto está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case mnProjeto:
+                FLUIGC.message.alert({
+                    message: 'O campo Nome do Projeto está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case mnResponsavel:
+                FLUIGC.message.alert({
+                    message: 'O campo Responsável está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case emailCliente:
+                FLUIGC.message.alert({
+                    message: 'O campo E-mail do Cliente está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case numLoja:
+                FLUIGC.message.alert({
+                    message: 'O campo Loja está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case codMatricula:
+                FLUIGC.message.alert({
+                    message: 'O campo Matrícula está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case hrPrevistas:
+                FLUIGC.message.alert({
+                    message: 'O campo Horas Previstas está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            case hrRealizadas:
+                FLUIGC.message.alert({
+                    message: 'O campo Horas Realizadas está vazio, preencha o campo e tente adicionar novamente.',
+                    title: 'Alerta de Campo Vazio',
+                    label: 'OK'
+                });
+                break;
+            default: 
+            switch(statusProjeto){
+                case"selecione":
+                    FLUIGC.message.alert({
+                        message: 'Selecione uma opção no campo Status do Projeto e tente adicionar novamente.',
+                        title: 'Alerta de Campo não selecionado',
+                        label: 'OK'
+                    });
+                    break;
+                default:
+                    if(tipoProjeto == "selecione"){
+                        FLUIGC.message.alert({
+                            message: 'Selecione uma opção no campo Dimencionamento do Projeto e tente adicionar novamente.',
+                            title: 'Alerta de Campo não selecionado',
+                            label: 'OK'
+                        });
+                    }
+                    if(tipoProjeto == "MIT" && documentoMit == ""){
+                        FLUIGC.message.alert({
+                            message: 'O campo MIT está vazio, preencha o campo e tente adicionar novamente.',
+                            title: 'Alerta de Campo Vazio',
+                            label: 'OK'
+                        });
+                    }       
+            }
+            
+        }
+
+        this.inserirProjeto()
+        
     }
 
 
