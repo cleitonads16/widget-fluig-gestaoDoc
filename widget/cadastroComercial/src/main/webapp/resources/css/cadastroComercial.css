@@ -1,0 +1,33 @@
+/* Coloque aqui seu codigo CSS */
+.space {
+    padding-top: 15px;
+}
+
+table {
+    width          : 100%;
+    border-collapse: collapse;
+    border         : 1px solid black;
+    text-align     : center;
+    table-layout   : fixed;
+
+}
+
+td,
+th {
+    border       : 1px solid black;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+}
+
+/* i {
+    cursor: pointer;
+} */
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.btn-link {
+    white-space: normal;
+    word-wrap  : break-word;
+}
