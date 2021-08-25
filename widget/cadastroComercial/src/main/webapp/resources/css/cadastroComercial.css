@@ -31,3 +31,7 @@ button:hover {
     white-space: normal;
     word-wrap  : break-word;
 }
+
+#btExcluir{
+    display: none;
+}

@@ -15,7 +15,8 @@
                     </div><br>
                     <div class="row" id="divBotaoAdd">
                         <div class="col-md-12">
-                            <button type="button" id="btAdd" class="btn btn-info" data-novoCadastro>Novo Cadastro</button>                                 
+                            <button type="button" id="btAdd" class="btn btn-info" data-novoCadastro>Novo Cadastro</button>&nbsp;&nbsp;
+                            <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>                                 
                         </div>
                     </div><br>
                     <div id="divTabela">
@@ -42,11 +43,6 @@
                                         <tbody id="tbodyTabela1" class="scroll-tbody-y table-body"></tbody>
                                     </table>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12" id="divBtnExcluir">
-                                        <button type="button" id="btExcluir" class="btn btn-danger" data-excluir>Excluir</button>                                 
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -68,7 +64,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label for="cnpj">CNPJ:</label>
-                                        <input type="text" id="cnpj" name="cnpj" class="form-control" onkeyup="mascaraCnpj(this)"/>
+                                        <input type="text" id="cnpj" name="cnpj" class="form-control" onkeypress='mascaraMutuario(this,cpfCnpj)' onblur='clearTimeout()'/>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="empresa">Empresa:</label>
@@ -76,7 +72,7 @@
                                     </div> 
                                     <div class="col-md-2">
                                         <label for="telefone">Telefone:</label>
-                                        <input type="text" id="telefone" name="telefone" class="form-control"/>
+                                        <input type="text" id="telefone" name="telefone" class="form-control" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"/>
                                     </div>
                                 </div>
                                 <div class="row space">
@@ -115,13 +111,14 @@
                                 <div class="row space">
                                     <div class="col-md-2">
                                         <label for="cidade">Cidade:</label>
-                                        <select id="cidade" class="form-control">
+                                        <input type="text" id="cidade" name="cidade" class="form-control"/>
+                                        <#--  <select id="cidade" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
                                             <option value="SP">SP</option>
                                             <option value="MG">MG</option>
                                             <option value="PE">PE</option>
                                             <option value="BA">BA</option>
-                                        </select>
+                                        </select>  -->
                                     </div>          
                                     <div class="col-md-2">
                                         <label for="segmento">Segmento:</label>
@@ -150,6 +147,10 @@
                                             <option value="MARCELA">MARCELA</option>
                                         </select>
                                     </div>
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-2 col-lg-2">
+                                        <label for="workArea">WorkArea</label> 
+                                        <input type="text" name="workArea" id="workArea" class="form-control"/>
+                                    </div>
                                     <div class="col-md-2">
                                         <label for="produto">Produto:</label>
                                         <select id="produto" class="form-control">
@@ -162,7 +163,7 @@
                                             <option value="WINTHOR">WINTHOR</option>
                                         </select>
                                     </div> 
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="modalidade">Modalidade:</label>
                                         <select id="modalidade" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
@@ -174,11 +175,11 @@
                                     
                                 </div>                                
                                 <div class="row space">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label for="solucoes">Soluções:</label>
                                         <select id="solucoes" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
-                                            <option value="FLUIG">GOODDATA</option>
+                                            <option value="FLUIG">FLUIG</option>
                                             <option value="GOODDATA">GOODDATA</option>
                                             <option value="APPs">APPs </option>
                                             <option value="CRM">CRM</option>
@@ -197,7 +198,7 @@
                                         <label for="outros">Informe Outros:</label>
                                         <input type="text" id="outros" name="outros" class="form-control"/>
                                     </div>       
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label for="estagio">Estágio:</label>
                                         <select id="estagio" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
@@ -209,27 +210,19 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <label for="estagioStatus">Opções:</label>
+                                        <label for="estagioStatus">Status:</label>
                                         <select id="estagioStatus1" class="form-control"> 
                                             <option value="SELECIONE">SELECIONE</option>                                           
                                             <option value="RESERVA">RESERVA</option>
-                                            <option value="PIPELINE">PIPELINE</option>                                                                         
+                                            <option value="PIPELINE">PIPELINE</option> 
+                                            <option value="FORECAST">FORECAST </option>                                                                        
                                         </select>
-                                        <select id="estagioStatus2" class="form-control">
+                                        <#--  <select id="estagioStatus2" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>                                           
                                             <option value="PIPELINE">PIPELINE</option>
                                             <option value="FORECAST">FORECAST </option>                                                                        
-                                        </select>
+                                        </select>  -->
                                     </div>
-                                    <div class="col-md-2">
-                                        <label for="status">Status:</label>
-                                        <select id="status" class="form-control">
-                                            <option value="SELECIONE">SELECIONE</option>
-                                            <option value="RESERVA">RESERVA</option>
-                                            <option value="PIPELINE">PIPELINE </option>
-                                            <option value="FORECAST">FORECAST</option>                              
-                                        </select>
-                                    </div>       
                                      <div class="col-md-2">
                                         <label for="dataPrevisao">Previsão de Venda:</label>
                                         <div class='input-group'>
