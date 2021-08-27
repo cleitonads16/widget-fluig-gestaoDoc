@@ -1,79 +1,9 @@
-$(document).ready(function(){
-
-     //Filtar tabela
-     var $rows = $('#tabela1 tr');
-     $('#campFiltro').keyup(function() {
-         var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-         
-         $rows.show().filter(function() {
-             var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-             return !~text.indexOf(val);
-         }).hide();
-     });
-
-    // selaciona todos o checkbox
-    $("#chk_tabela1").on("click", function(){
-        let sel = document.getElementsByClassName('cbxSelect');
-        if (document.getElementById('chk_tabela1').checked == true) {
-            for (var i = 0; i < sel.length; i++) {
-                sel[i].checked = true;
-            }
-        }
-        else {
-            for (let i = 0; i < sel.length; i++) {
-                sel[i].checked = false;
-            }
-        }
-    })
-
-    // checbox botão excluir
-    $('input[type="checkbox"]').on('click touchstart', function(){
-        let quantCheck = $('input[type="checkbox"]:checked').length;
-        if(quantCheck != 0) {
-            $('#btExcluir').css('display', 'inline')
-        } 
-        else {
-            $('#btExcluir').css('display', 'none')
-        }
-    });
-    
-})
-
 function msgValidar(){
    FLUIGC.message.alert({
         message: 'Selecione ou preencha o campo indicado e tente enviar novamente.',
         title: 'Campo não preenchido ou selecionado',
         label: 'OK'
     });
-}
-
-function bordas(){
-    
-    $("#codigo").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#cnpj").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#empresa").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#telefone").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#contato").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#setor").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#email").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#dataPrevisao").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#cduAdesao").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#servico").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#workArea").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#unidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#entidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#cidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#segmento").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#esn").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#produto").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#modalidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#solucoes").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#estagioStatus2").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#saas").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#origem").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#outros").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#estagioStatus1").css({"border-color" : "#CCCCCC", "padding": "2px"})
-    $("#mensalidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
 }
 
 function formatarMoeda(elemento){
@@ -105,7 +35,7 @@ function execmascara(){
 }
  
 function cpfCnpj(v){
- 
+
     //Remove tudo o que não é dígito
     v=v.replace(/\D/g,"")
         //Coloca ponto entre o segundo e o terceiro dígitos
@@ -118,7 +48,6 @@ function cpfCnpj(v){
         v=v.replace(/(\d{4})(\d)/,"$1-$2")
  
     return v
- 
 }
 
 function mask(o, f) {
@@ -128,21 +57,84 @@ function mask(o, f) {
         o.value = v;
       }
     }, 1);
-  }
+}
   
-  function mphone(v) {
+function mphone(v) {
     let r = v.replace(/\D/g, "");
     r = r.replace(/^0/, "");
     if (r.length > 10) {
-      r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+        r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
     } else if (r.length > 5) {
-      r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+        r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
     } else if (r.length > 2) {
-      r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+        r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
     } else {
-      r = r.replace(/^(\d*)/, "($1");
+        r = r.replace(/^(\d*)/, "($1");
     }
     return r;
-  }
+}
 
-  
+function clearValue() {
+
+    const clearInput = ""
+    const clearSelect = "SELECIONE"
+
+    $("#unidade").val(clearSelect)
+    $("#codigo").val(clearInput)
+    $("#cnpj").val(clearInput)
+    $("#empresa").val(clearInput)
+    $("#telefone").val(clearInput)
+    $("#contato").val(clearInput)
+    $("#setor").val(clearInput)
+    $("#email").val(clearInput)
+    $("#entidade").val(clearSelect)
+    $("#origem").val(clearSelect)
+    $("#cidade").val(clearInput)
+    $("#segmento").val(clearSelect)
+    $("#esn").val(clearSelect)
+    $("#workArea").val(clearInput)  
+    $("#produto").val(clearSelect)  
+    $("#modalidade").val(clearSelect)  
+    $("#solucoes").val(clearSelect)  
+    $("#estagio").val(clearSelect)  
+    $("#estagioStatus1").val(clearSelect)  
+    $("#dataPrevisao").val(clearInput)  
+    $("#cduAdesao").val(clearInput)  
+    $("#saas").val(clearSelect)  
+    $("#mensalidade").val(clearInput)  
+    $("#servico").val(clearInput)  
+    $("#observacoes").val(clearInput) 
+    $("#outros").val(clearInput) 
+
+}
+
+function bordas(){
+    
+    $("#codigo").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#cnpj").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#empresa").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#telefone").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#contato").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#setor").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#email").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#dataPrevisao").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#cduAdesao").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#servico").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#workArea").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#unidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#entidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#cidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#segmento").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#esn").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#produto").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#modalidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#solucoes").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#estagioStatus2").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#saas").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#origem").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#outros").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#estagioStatus1").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    $("#mensalidade").css({"border-color" : "#CCCCCC", "padding": "2px"})
+}
+
+/*$(document).ready(function(){})*/

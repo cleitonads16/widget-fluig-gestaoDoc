@@ -47,6 +47,8 @@
                         </div>
                     </div>
                     <div id="divFormulario">
+                    <h3 id="h3Inserir"><span class="fluigicon fluigicon-add-test icon-md"></span>&nbsp;INSERIR DADOS</h3>
+                    <h3 id="h3Editar"><span class="fluigicon fluigicon-community-edit icon-md"></span>&nbsp;EDITAR DADOS</h3>
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="row">
@@ -57,6 +59,7 @@
                                             <option value="TSM">TSM</option>
                                             <option value="TSUL">TSUL</option>
                                         </select>
+                                        <input type="hidden" id="id_editar" name="id_editar">
                                     </div>
                                     <div class="col-md-2">
                                         <label for="codigo">Código Prospect:</label>
@@ -143,7 +146,6 @@
                                             <option value="MARYSTELLA">MARYSTELLA</option>
                                             <option value="LEILA">LEILA</option>
                                             <option value="MARCELO">MARCELO</option>
-                                            <option value="MARCELO">MARCELO</option>
                                             <option value="MARCELA">MARCELA</option>
                                         </select>
                                     </div>
@@ -215,7 +217,9 @@
                                             <option value="SELECIONE">SELECIONE</option>                                           
                                             <option value="RESERVA">RESERVA</option>
                                             <option value="PIPELINE">PIPELINE</option> 
-                                            <option value="FORECAST">FORECAST </option>                                                                        
+                                            <option value="FORECAST">FORECAST </option> 
+                                            <option value="FECHADA">FECHADA</option>                              
+
                                         </select>
                                         <#--  <select id="estagioStatus2" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>                                           
@@ -278,13 +282,241 @@
                                 </div>                               
                                 <div class="row space">
                                     <div class="col-md-12">
-                                        <button type="button" id="btEnviar" class="btn btn-success" data-enviar>Enviar</button>&nbsp;&nbsp;                                   
+                                        <button type="button" id="btEnviar" class="btn btn-success" data-enviar>Enviar</button>&nbsp;                                   
+                                        <button type="button" id="btEditar" class="btn btn-warning" data-editar>Editar</button>&nbsp;                                   
                                         <button type="button" id="btSair" class="btn btn-default" data-sair>Sair</button>                                    
                                     </div>
                                 </div>
                             </div>
                         </div>       
                     </div>
+                    <#--  <div id="divEditarFormulario">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="unidadeEditar">Unidade:</label>
+                                        <select id="unidadeEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="TSM">TSM</option>
+                                            <option value="TSUL">TSUL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="codigoEditar">Código Prospect:</label>
+                                        <input type="text" id="codigoEditar" name="codigoEditar" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="cnpjEditar">CNPJ:</label>
+                                        <input type="text" id="cnpjEditar" name="cnpjEditar" class="form-control" onkeypress='mascaraMutuario(this,cpfCnpj)' onblur='clearTimeout()'/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="empresaEditar">Empresa:</label>
+                                        <input type="text" id="empresaEditar" name="empresaEditar" class="form-control"/>
+                                    </div> 
+                                    <div class="col-md-2">
+                                        <label for="telefoneEditar">Telefone:</label>
+                                        <input type="text" id="telefoneEditar" name="telefoneEditar" class="form-control" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"/>
+                                    </div>
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-2">
+                                        <label for="contatoEditar">Contato:</label>
+                                        <input type="text" id="contatoEditar" name="contatoEditar" class="form-control"/>
+                                    </div>  
+                                    <div class="col-md-2">
+                                        <label for="setorEditar">Setor:</label>
+                                        <input type="text" id="setorEditar" name="setorEditar" class="form-control"/>
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <label for="emailEditar">E-mail:</label>
+                                        <input type="text" id="emailEditar" name="emailEditar" class="form-control"/>
+                                    </div>  
+                                    <div class="col-md-2">
+                                        <label for="entidadeEditar">Entidade:</label>
+                                        <select id="entidadeEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="PROSPECT">PROSPECT</option>
+                                            <option value="CLIENTE">TSUL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="origemEditar">Origem:</label>
+                                        <select id="origemEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="APN">APN</option>
+                                            <option value="INDICACAO">INDICAÇÃO</option>
+                                            <option value="0800">0800</option>
+                                            <option value="ESN">ESN</option>
+                                        </select>
+                                    </div>
+                                                              
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-2">
+                                        <label for="cidade">Cidade:</label>
+                                        <input type="text" id="cidadeEditar" name="cidadeEditar" class="form-control"/>
+                                    </div>          
+                                    <div class="col-md-2">
+                                        <label for="segmentoEditar">Segmento:</label>
+                                        <select id="segmentoEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="AGRO">AGRO</option>
+                                            <option value="CONSTRUCAO">CONSTRUÇÃO</option>
+                                            <option value="DISTRIBUICAO">DISTRIBUIÇÃO</option>
+                                            <option value="EDUCACIONAL">EDUCACIONAL</option>
+                                            <option value="LOGISTICA">LOGISTICA</option>
+                                            <option value="MANUFATURA">MANUFATURA</option>
+                                            <option value="SERVICOS">SERVIÇOS</option>
+                                            <option value="VAREJO">VAREJO</option>
+                                        </select>
+                                    </div>        
+                                	<div class="col-md-2">
+                                        <label for="esnEditar">ESN:</label>
+                                        <select id="esnEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="CARLA">CARLA</option>
+                                            <option value="MONICA">MONICA</option>
+                                            <option value="MARYSTELLA">MARYSTELLA</option>
+                                            <option value="LEILA">LEILA</option>
+                                            <option value="MARCELO">MARCELO</option>
+                                            <option value="MARCELO">MARCELO</option>
+                                            <option value="MARCELA">MARCELA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-2 col-lg-2">
+                                        <label for="workAreaEditar">WorkArea</label> 
+                                        <input type="text" name="workAreaEditar" id="workAreaEditar" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="produtoEditar">Produto:</label>
+                                        <select id="produtoEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="PROTHEUS">PROTHEUS</option>
+                                            <option value="RM">RM</option>
+                                            <option value="LOGIX">LOGIX</option>
+                                            <option value="DATA">DATA </option>
+                                            <option value="SUL">SUL </option>
+                                            <option value="WINTHOR">WINTHOR</option>
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-2">
+                                        <label for="modalidadeEditar">Modalidade:</label>
+                                        <select id="modalidadeEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="CORPORATIVO">CORPORATIVO</option>
+                                            <option value="TRADICIONAL">TRADICIONAL </option>
+                                            <option value="INTERA">INTERA</option>                              
+                                        </select>
+                                    </div> 
+                                    
+                                </div>                                
+                                <div class="row space">
+                                    <div class="col-md-3">
+                                        <label for="solucoesEditar">Soluções:</label>
+                                        <select id="solucoesEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="FLUIG">FLUIG</option>
+                                            <option value="GOODDATA">GOODDATA</option>
+                                            <option value="APPs">APPs </option>
+                                            <option value="CRM">CRM</option>
+                                            <option value="TEF">TEF</option>
+                                            <option value="VTEX">VTEX </option>
+                                            <option value="SW">SW</option>
+                                            <option value="WEBSERVICE">WEBSERVICE</option>
+                                            <option value="PRIME">PRIME </option>
+                                            <option value="CLOUD">CLOUD</option>
+                                            <option value="WINTHOR">WINTHOR </option>
+                                            <option value="EDUCACAO">EDUCAÇÃO</option> 
+                                            <option value="OUTROS">OUTROS</option>                                  
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="outrosEditar">Informe Outros:</label>
+                                        <input type="text" id="outrosEditar" name="outrosEditar" class="form-control"/>
+                                    </div>       
+                                    <div class="col-md-3">
+                                        <label for="estagioEditar">Estágio:</label>
+                                        <select id="estagioEditar" class="form-control">
+                                            <option value="SELECIONE">SELECIONE</option>
+                                            <option value="PRIMEIRAVISITA">PRIMEIRA VISITA</option>
+                                            <option value="DEMONSTRACAO">DEMONSTRAÇÃO </option>
+                                            <option value="ELABORACAODEPROPOSTA">ELABORAÇÃO DE PROPOSTA</option>
+                                            <option value="NEGOCIACAO">NEGOCIAÇÃO</option>
+                                            <option value="FECHADA">FECHADA</option>                              
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="estagioStatusEditar">Status:</label>
+                                        <select id="estagioStatus1Editar" class="form-control"> 
+                                            <option value="SELECIONE">SELECIONE</option>                                           
+                                            <option value="RESERVA">RESERVA</option>
+                                            <option value="PIPELINE">PIPELINE</option> 
+                                            <option value="FORECAST">FORECAST </option>                                                                        
+                                        </select>
+                                    </div>
+                                     <div class="col-md-2">
+                                        <label for="dataPrevisaoEditar">Previsão de Venda:</label>
+                                        <div class='input-group'>
+                                            <span class="input-group-addon">
+                                                <i class="fluigicon fluigicon-calendar icon-sm"></i>
+                                            </span>
+                                            <input type="text" id="dataPrevisaoEditar" name="dataPrevisaoEditar" class="form-control"/>
+                                        </div>
+                                    </div>       
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-3">
+                                    <label for="cduAdesaoEditar">CDU/Adesão:</label>
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">
+                                            <i class="fluigicon fluigicon-money-circle icon-sm"></i>
+                                        </span>
+                                            <input type="text" id="cduAdesaoEditar" name="cduAdesaoEditar" class="form-control dinheiro" onkeyup="formatarMoeda(this)"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="saasEditar">SAAS:</label>
+                                        <select id="saasEditar" class="form-control"> 
+                                            <option value="SELECIONE">SELECIONE</option>                                           
+                                            <option value="SIM">SIM</option>
+                                            <option value="NAO">NÃO</option>                                                                         
+                                        </select>
+                                    </div>
+								    <div class="col-md-3">
+                                        <label for="mensalidadeEditar">Mensalidade:</label>
+                                        <div class='input-group'>
+                                            <span class="input-group-addon">
+                                                <i class="fluigicon fluigicon-money-circle icon-sm"></i>
+                                            </span>
+                                            <input type="text" id="mensalidadeEditar" name="mensalidadeEditar" class="form-control dinheiro" onkeyup="formatarMoeda(this)"/>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3">
+                                        <label for="servicoEditar">Serviço:</label>
+                                        <div class='input-group'>
+                                            <span class="input-group-addon">
+                                                <i class="fluigicon fluigicon-money-circle icon-sm"></i>
+                                            </span>
+                                            <input type="text" id="servicoEditar" name="servicoEditar" class="form-control" onkeyup="formatarMoeda(this)"/>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="row space">
+                                    <div class="col-md-12">
+                                        <label for="observacoesEditar">Observações:</label>
+                                        <textarea type="text" id="observacoesEditar" rows="3" class="form-control"></textarea>
+                                    </div>                                  
+                                </div>                               
+                                <div class="row space">
+                                    <div class="col-md-12">
+                                        <button type="button" id="btEditar" class="btn btn-success" data-editar>Editar</button>&nbsp;&nbsp;                                   
+                                        <button type="button" id="btSairEditar" class="btn btn-default" data-sairEditar>Sair</button>                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>       
+                    </div>  -->
                 </div>
             </div>
         </form>

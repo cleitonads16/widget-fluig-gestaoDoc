@@ -10,11 +10,13 @@ var MyWidget = SuperWidget.extend({
     	let data = $.datepicker.formatDate('dd/mm/yy', new Date());
         $('#nomeUsuario_'+this.instanceId).val(WCMAPI.getUser());
         $('#data_'+this.instanceId).val(data);
+        // datas
+        var mySimpleCalendar = FLUIGC.calendar('#dataPrevisao');
 
         // ocultos e desabilitados
         $("#divFormulario").hide()
-        $("#estagioStatus2").hide()
-        // $("#btExcluir").hide()
+        $("#btEditar").hide()
+        $("#h3Editar").hide()
         $("#outros").prop('disabled', true);
         $("#estagioStatus1").prop('disabled', true)
         $("#mensalidade").prop('disabled', true)
@@ -22,11 +24,25 @@ var MyWidget = SuperWidget.extend({
         // mascaras
         let moeda = $(".dinheiro").val()
         moeda.toLocaleString("pt-BR",{style: 'currency', currency: 'BRL' });
-        // $(".dinheiro").mask('000.000.000.000.000,00' , { reverse : true});        
-        
+
         // adicionar cadastro
         $("#btAdd").on("click", function(){
             $("#divFormulario").show()
+            $("#btEnviar").show()
+            $("#h3Inserir").show()
+            $("#h3Editar").hide()
+            $("#btEditar").hide()
+            $("#divTabela").hide()
+            $("#divBotaoAdd").hide()
+        })
+
+        // editar
+        $(".icone").on("click", function(){
+            $("#divFormulario").show()
+            $("#btEditar").show()
+            $("#h3Editar").show()
+            $("#h3Inserir").hide()
+            $("#btEnviar").hide()
             $("#divTabela").hide()
             $("#divBotaoAdd").hide()
         })
@@ -36,6 +52,8 @@ var MyWidget = SuperWidget.extend({
             $("#divFormulario").hide()
             $("#divTabela").show()
             $("#divBotaoAdd").show()
+            clearValue()
+            window.location.reload()
         })
 
         // habilitar campos
@@ -56,12 +74,17 @@ var MyWidget = SuperWidget.extend({
                 case "PRIMEIRAVISITA":
                     $("#estagioStatus1").prop('disabled', false).show()
                     break;
+                case "DEMONSTRACAO":
+                    $("#estagioStatus1").prop('disabled', false).show()
+                    break;
+                case "ELABORACAODEPROPOSTA":
+                    $("#estagioStatus1").prop('disabled', false).show()
+                    break;
                 case "NEGOCIACAO":
                     $("#estagioStatus1").show().val($('option:contains("FORECAST")').val()).prop('disabled', true)
                     break;
                 case "FECHADA":
-                    $("#estagioStatus1").prop('disabled', true).val(limparOpcao)
-                    $("#estagioStatus2").prop('disabled', true).val(limparOpcao)
+                    $("#estagioStatus1").show().val($('option:contains("FECHADA")').val()).prop('disabled', true)
                     break;
                     default:
             }
@@ -76,18 +99,285 @@ var MyWidget = SuperWidget.extend({
             }
         })
         
-        // datas
-        var mySimpleCalendar = FLUIGC.calendar('#dataPrevisao');
+        //Filtar tabela
+        let $rows = $('#tbodyTabela1 tr');
+        $('#campFiltro').keyup(function() {
+            let val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            
+            $rows.show().filter(function() {
+                let text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        })
 
+        // selaciona todos o checkbox
+        $("#chk_tabela1").on("click", function(){
+            let sel = document.getElementsByClassName('cbxSelect');
+            if (document.getElementById('chk_tabela1').checked == true) {
+                for (var i = 0; i < sel.length; i++) {
+                    sel[i].checked = true;
+                }
+            }
+            else {
+                for (let i = 0; i < sel.length; i++) {
+                    sel[i].checked = false;
+                }
+            }
+        })
+
+        // checbox botão excluir
+        $('input[type="checkbox"]').on('click touchstart', function(){
+            let quantCheck = $('input[type="checkbox"]:checked').length;
+            if(quantCheck != 0) {
+                $('#btExcluir').css('display', 'inline')
+            } 
+            else {
+                $('#btExcluir').css('display', 'none')
+            }
+        })
+
+        $(document).on('click', '.icone', function(e) {
+            e.preventDefault;
+            tdobj = $(this).closest('tr').find('td');          
+            var dataset = DatasetFactory.getDataset("formGestaoProspects", null, null, null);
+            var idDocTabela = $($(e.currentTarget).parent().parent().parent().find("td")[0]).find('input[class^="id_documento"]').val();
+          
+            for(var i=0; i<dataset.values.length; i++){
+        
+                var campo1 = dataset.values[i]['documentid'];
+        
+                if(campo1 == idDocTabela){
+        
+                    var campo2 = dataset.values[i]['unidade'];
+                    var campo3 = dataset.values[i]['codProspct'];
+                    var campo4 = dataset.values[i]['cnpj'];
+                    var campo5 = dataset.values[i]['empresa'];
+                    var campo6 = dataset.values[i]['telProspect'];
+                    var campo7 = dataset.values[i]['contatoProspect'];
+                    var campo8 = dataset.values[i]['setorProspect'];
+                    var campo9 = dataset.values[i]['emailProsprect'];
+                    var campo10 = dataset.values[i]['entidade'];
+                    var campo11 = dataset.values[i]['origem'];
+                    var campo12 = dataset.values[i]['cidade'];
+                    var campo13 = dataset.values[i]['segmento'];
+                    var campo14 = dataset.values[i]['esn'];
+                    var campo15 = dataset.values[i]['workArea'];
+                    var campo16 = dataset.values[i]['produto'];
+                    var campo17 = dataset.values[i]['modalidade'];
+                    var campo18 = dataset.values[i]['solucoes'];
+                    var campo19 = dataset.values[i]['estagio'];
+                    var campo20 = dataset.values[i]['status'];
+                    var campo21 = dataset.values[i]['previVenda'];
+                    var campo22 = dataset.values[i]['valorCdu'];
+                    var campo23 = dataset.values[i]['saas'];
+                    var campo24 = dataset.values[i]['mensalidade'];
+                    var campo25 = dataset.values[i]['servico'];
+                    var campo26 = dataset.values[i]['obs'];
+                    var campo27 = dataset.values[i]['outros'];
+                    var campo28 = dataset.values[i]['documentid'];
+                   
+                }    
+        
+            }
+                                 
+            $("#unidade").val(campo2)
+            $("#codigo").val(campo3)
+            $("#cnpj").val(campo4)
+            $("#empresa").val(campo5)
+            $("#telefone").val(campo6)
+            $("#contato").val(campo7)
+            $("#setor").val(campo8)
+            $("#email").val(campo9)
+            $("#entidade").val(campo10)
+            $("#origem").val(campo11)
+            $("#cidade").val(campo12)
+            $("#segmento").val(campo13)
+            $("#esn").val(campo14)
+            $("#workArea").val(campo15)  
+            $("#produto").val(campo16)  
+            $("#modalidade").val(campo17)  
+            $("#solucoes").val(campo18)  
+            $("#estagio").val(campo19)  
+            $("#estagioStatus1").val(campo20)  
+            $("#dataPrevisao").val(campo21)  
+            $("#cduAdesao").val(campo22)  
+            $("#saas").val(campo23)  
+            $("#mensalidade").val(campo24)  
+            $("#servico").val(campo25)  
+            $("#observacoes").val(campo26)  
+            $("#outros").val(campo27)  
+            $("#id_editar").val(campo28)  
+                          
+        })
+
+        // Edita os campos do Formuloario
+        $("button[data-editar]").on("click", function(){
+
+            let dsEditar = DatasetFactory.getDataset("formGestaoProspects", null, null, null);
+            let idEditar = $("#id_editar").val();
+            
+            for(let i=0; i<dsEditar.values.length; i++){
+                let idFormEditar = dsEditar.values[i]['documentid'];
+                if(idFormEditar == idEditar){
+
+                    let _xml3 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                                '<soapenv:Header/>'+
+                                '<soapenv:Body>'+
+                                '<ws:updateCardData>'+
+                                    '<companyId>1</companyId>'+
+                                    '<username>academy.aluno</username>'+
+                                    '<password>academy.aluno</password>'+
+                                    '<cardId>'+ idFormEditar +'</cardId>'+
+                                    '<cardData>'+
+                                        '<item>'+                                     
+                                            '<field>unidade</field>'+                                       
+                                            '<value>' + $("#unidade").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>codProspct</field>'+             
+                                            '<value>' + $("#codigo").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>cnpj</field>'+             
+                                            '<value>' + $("#cnpj").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>empresa</field>'+             
+                                            '<value>' + $("#empresa").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>telProspect</field>'+             
+                                            '<value>' + $("#telefone").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>contatoProspect</field>'+             
+                                            '<value>' + $("#contato").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>setorProspect</field>'+             
+                                            '<value>' + $("#setor").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>emailProsprect</field>'+             
+                                            '<value>' + $("#email").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>entidade</field>'+             
+                                            '<value>' + $("#entidade").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>origem</field>'+             
+                                            '<value>' + $("#origem").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>cidade</field>'+             
+                                            '<value>' + $("#cidade").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>segmento</field>'+             
+                                            '<value>' + $("#segmento").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>esn</field>'+             
+                                            '<value>' + $("#esn").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>workArea</field>'+             
+                                            '<value>' + $("#workArea").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>produto</field>'+             
+                                            '<value>' + $("#produto").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>modalidade</field>'+             
+                                            '<value>' + $("#modalidade").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>solucoes</field>'+             
+                                            '<value>' + $("#solucoes").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>outros</field>'+             
+                                            '<value>' + $("#outros").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>estagio</field>'+             
+                                            '<value>' + $("#estagio").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>status</field>'+             
+                                            '<value>' + $("#estagioStatus1").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>previVenda</field>'+             
+                                            '<value>' + $("#dataPrevisao").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>valorCdu</field>'+             
+                                            '<value>' + $("#cduAdesao").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>saas</field>'+             
+                                            '<value>' + $("#saas").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>mensalidade</field>'+             
+                                            '<value>' + $("#mensalidade").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>servico</field>'+             
+                                            '<value>' + $("#servico").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>obs</field>'+             
+                                            '<value>' + $("#observacoes").val() + '</value>'+
+                                        '</item>'+
+                                    '</cardData>'+
+                                '</ws:updateCardData>'+
+                                '</soapenv:Body>'+
+                            '</soapenv:Envelope>';
+
+                    let urlWsEditar = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "xml",
+                        url: urlWsEditar,
+                        data: _xml3,
+                        crossDomain: true,
+                        success: function (data) {
+                            FLUIGC.toast({
+                                title: "Sucesso",
+                                message: 'Cadastro Editado.',
+                                type: 'success',
+                            });
+
+                            $("#divFormulario").hide()
+                            $("#divTabela").show()
+                            
+                        },
+                        error: function (error) {
+                            FLUIGC.toast({
+                                title: "Erro",
+                                message: error + ' ao tentar editar o cadastro',
+                                type: 'danger',
+                            });
+                        }
+                    }); 
+                }
+            }
+
+            setTimeout(function(){ window.location.reload(); }, 1000);
+        })
     },
   
     //BIND de eventos
     bindings: {
         local: {
             'enviar'     : ['click_validarCampos'],
-            'excluir'    : ['click_excluirProjetos'],
-            // 'checkboxTb' : ['click_botaoExcluir']
-        }
+            'excluir'    : ['click_excluirProjetos']
+            }
         },
         global: {
             
@@ -180,7 +470,7 @@ var MyWidget = SuperWidget.extend({
         }else if($("#estagio").val() == "SELECIONE"){
            $("#estagio").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar()  
-        }else if($("#estagio").val() != "SELECIONE" && $("#estagioStatus1").val() == "SELECIONE"){
+        }else if(($("#estagio").val() != "SELECIONE" || $("#estagio").val() != "FECHADA") && $("#estagioStatus1").val() == "SELECIONE"){
             $("#estagioStatus1").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar()  
         }else if($("#dataPrevisao").val() == ""){
@@ -205,16 +495,16 @@ var MyWidget = SuperWidget.extend({
     },
 
     inserirDados: function(){
-        console.log("INSERIU DADOS")
-        var _xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+        
+        let _xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
         '<soapenv:Header></soapenv:Header>'+
         '<soapenv:Body>'+
         '<ws:create>'+
             '<companyId>1</companyId>'+
-            // '<username>admin</username>' +
-            // '<password>!Senha@2020!</password>' +
-            '<username>academy.aluno</username>'+
-            '<password>academy.aluno</password>'+
+            '<username>admin</username>' +
+            '<password>!Senha@2020!</password>' +
+            // '<username>academy.aluno</username>'+
+            // '<password>academy.aluno</password>'+
             '<card>'+         
                 '<item>'+
                     '<attachs></attachs>'+            
@@ -287,16 +577,16 @@ var MyWidget = SuperWidget.extend({
                     '<value>' + $("#solucoes").val() + '</value>'+
                     '</cardData>'+
                     '<cardData>'+
-                    '<field>solucoes</field>'+
+                    '<field>outros</field>'+
                     '<value>' + $("#outros").val() + '</value>'+
                     '</cardData>'+
                     '<cardData>'+
                     '<field>estagio</field>'+
-                    '<value>' + $("#estagioStatus1").val() + '</value>'+
+                    '<value>' + $("#estagio").val() + '</value>'+
                     '</cardData>'+
                     '<cardData>'+
                     '<field>status</field>'+
-                    '<value>' + $("#estagioStatus2").val() + '</value>'+
+                    '<value>' + $("#estagioStatus1").val() + '</value>'+
                     '</cardData>'+ 
                     '<cardData>'+
                     '<field>previVenda</field>'+
@@ -327,8 +617,8 @@ var MyWidget = SuperWidget.extend({
                     '<docapprovers></docapprovers>'+                                         
                     '<docsecurity></docsecurity>'+                        
                     '<expires>false</expires>'+            
-                    '<parentDocumentId>7</parentDocumentId>'+
-                    // '<parentDocumentId>204900</parentDocumentId>'+
+                    // '<parentDocumentId>7</parentDocumentId>'+
+                    '<parentDocumentId>204900</parentDocumentId>'+
                     '<reldocs></reldocs>'+
                 '</item>'+
             '</card>'+
@@ -336,7 +626,7 @@ var MyWidget = SuperWidget.extend({
         '</soapenv:Body>'+
         '</soapenv:Envelope>';
 
-        var urlWs = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+        let urlWs = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
 
         $.ajax({
             type: "POST",
@@ -345,26 +635,23 @@ var MyWidget = SuperWidget.extend({
             data: _xml,
             crossDomain: true,
             success: function (data) {
-                // if(mitDocum != "" && i == 0){
-                //     FLUIGC.toast({
-                //         title: "Sucesso",
-                //         message: 'Projeto cadastrado com sucesso. Relação das MITs de acordo com o tamanho do projeto selecionado.',
-                //         type: 'success',
-                //         timeout: 10000
-                //     });
-                // }
+              
+                FLUIGC.toast({
+                    title: "Sucesso",
+                    message: 'Prospect cadastrado com sucesso.',
+                    type: 'success',
+                });
+                
+                clearValue()
             },
             error: function (error) {
-                // if(mitDocum != "" && i == 0){
-                //     FLUIGC.toast({
-                //         title: "Erro ao adicionar a documentação",
-                //         message: 'Verificar o problema na integração do ECMCardService.',
-                //         type: 'danger',
-                //         timeout: 50000
-                //     });
-                //     console.log("Resultado com erro da Aplicação = " + error);
-                // }
-               
+                
+                FLUIGC.toast({
+                    title: "Erro ao adicionar cadastro",
+                    message: 'Verificar o problema na integração do ECMCardService.',
+                    type: 'danger',
+                });
+                console.log("Resultado com erro da Aplicação = " + error);
             }
         });
 
@@ -373,15 +660,13 @@ var MyWidget = SuperWidget.extend({
     // excluir dados
     excluirProjetos: function(){
         
-        var check = document.querySelectorAll('td [type="checkbox"]:checked')
-        var selecionado = document.getElementsByClassName('cbxSelect')
+        const check = document.querySelectorAll('td [type="checkbox"]:checked')
 
-        for(var i = 0; i < check.length; i++){
-            console.log("CHECKADO LINHA:  " + i + ' - ' + check[i].value)
+        for(let i = 0; i < check.length; i++){
             if(check[i].checked == true){
                 
-                var urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
-                var _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
+                let urlWsDelet = WCMAPI.getServerURL() + '/webdesk/ECMCardService?wsdl'
+                let _xml2 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
                                 '<soapenv:Header/>'+
                                 '<soapenv:Body>'+
                                 '<ws:deleteCard>'+
@@ -418,7 +703,7 @@ var MyWidget = SuperWidget.extend({
             check[i].parentNode.parentNode.remove()
         }
 
-        console.log("Fora do Ajax   "+selecionado[0].checked)
+        $('#btExcluir').css('display', 'none')
   
     }
 
