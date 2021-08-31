@@ -175,6 +175,9 @@ var MyWidget = SuperWidget.extend({
                     var campo26 = dataset.values[i]['obs'];
                     var campo27 = dataset.values[i]['outros'];
                     var campo28 = dataset.values[i]['documentid'];
+                    var campo29 = dataset.values[i]['qtdHoras'];
+                    var campo30 = dataset.values[i]['valHora'];
+                    var campo31 = dataset.values[i]['totalServicos'];
                    
                 }    
         
@@ -206,7 +209,10 @@ var MyWidget = SuperWidget.extend({
             $("#servico").val(campo25)  
             $("#observacoes").val(campo26)  
             $("#outros").val(campo27)  
-            $("#id_editar").val(campo28)  
+            $("#id_editar").val(campo28) 
+            $("#quantHoras").val(campo29)  
+            $("#valorHora").val(campo30)  
+            $("#totalServico").val(campo31)   
                           
         })
 
@@ -330,6 +336,18 @@ var MyWidget = SuperWidget.extend({
                                             '<value>' + $("#servico").val() + '</value>'+
                                         '</item>'+
                                         '<item>'+            
+                                            '<field>qtdHoras</field>'+             
+                                            '<value>' + $("#quantHoras").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>valHora</field>'+             
+                                            '<value>' + $("#valorHora").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
+                                            '<field>totalServicos</field>'+             
+                                            '<value>' + $("#totalServico").val() + '</value>'+
+                                        '</item>'+
+                                        '<item>'+            
                                             '<field>obs</field>'+             
                                             '<value>' + $("#observacoes").val() + '</value>'+
                                         '</item>'+
@@ -370,6 +388,19 @@ var MyWidget = SuperWidget.extend({
 
             setTimeout(function(){ window.location.reload(); }, 1000);
         })
+
+        // autocomplete
+        // let dsComplete = DatasetFactory.getDataset('formGestaoProspects', null, null, null);
+        // let states = [];
+
+        // for (let i = 0; i < dsComplete.values.length; i++) {
+        //     states.push(dsComplete.values[i]['esn']);
+        // }
+        
+        // $("#esn" ).autocomplete({
+        //     source: states
+        //   });
+        
     },
   
     //BIND de eventos
@@ -387,14 +418,15 @@ var MyWidget = SuperWidget.extend({
     tabelaDeDados: function() {
         let ds = DatasetFactory.getDataset('formGestaoProspects', null, null, null);
         let html = "";
+        let states = [];
 
         for (let i = 0; i < ds.values.length; i++){
-            
             let id = ds.values[i]['documentid'];
             let codigo = ds.values[i]['codProspct'];
             let empresa = ds.values[i]['empresa'];
             let esn = ds.values[i]['esn'];
             let status = ds.values[i]['status'];
+            states.push(esn);
            
             html += "<tr class='tr_class'>"+
                 '<td><input type="checkbox" name="checkExcuir" class="cbxSelect" value="'+ id +'" data-checkboxTb/><input type="hidden" class="id_documento" value="' + id + '"/></td>'+
@@ -409,6 +441,9 @@ var MyWidget = SuperWidget.extend({
 
         document.getElementById("tbodyTabela1").innerHTML = html
 
+        $("#esn" ).autocomplete({
+            source: states
+          });
     },
 
     validarCampos: function (){
@@ -488,7 +523,16 @@ var MyWidget = SuperWidget.extend({
         }else if($("#servico").val() == ""){
            $("#servico").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar() 
-        }else{
+        }else if($("#quantHoras").val() == ""){
+            $("#quantHoras").css({"border-color" : "#F00", "padding": "2px"})
+             msgValidar() 
+         }else if($("#valorHora").val() == ""){
+            $("#valorHora").css({"border-color" : "#F00", "padding": "2px"})
+             msgValidar() 
+         }else if($("#totalServico").val() == ""){
+            $("#totalServico").css({"border-color" : "#F00", "padding": "2px"})
+             msgValidar() 
+         }else{
             bordas()
             this.inserirDados()
         }
@@ -501,10 +545,10 @@ var MyWidget = SuperWidget.extend({
         '<soapenv:Body>'+
         '<ws:create>'+
             '<companyId>1</companyId>'+
-            '<username>admin</username>' +
-            '<password>!Senha@2020!</password>' +
-            // '<username>academy.aluno</username>'+
-            // '<password>academy.aluno</password>'+
+            // '<username>admin</username>' +
+            // '<password>!Senha@2020!</password>' +
+            '<username>academy.aluno</username>'+
+            '<password>academy.aluno</password>'+
             '<card>'+         
                 '<item>'+
                     '<attachs></attachs>'+            
@@ -609,6 +653,18 @@ var MyWidget = SuperWidget.extend({
                     '<value>' + $("#servico").val() + '</value>'+
                     '</cardData>'+ 
                     '<cardData>'+
+                    '<field>qtdHoras</field>'+
+                    '<value>' + $("#quantHoras").val() + '</value>'+
+                    '</cardData>'+
+                    '<cardData>'+
+                    '<field>valHora</field>'+
+                    '<value>' + $("#valorHora").val() + '</value>'+
+                    '</cardData>'+
+                    '<cardData>'+
+                    '<field>totalServicos</field>'+
+                    '<value>' + $("#totalServico").val() + '</value>'+
+                    '</cardData>'+
+                    '<cardData>'+
                     '<field>obs</field>'+
                     '<value>' + $("#observacoes").val() + '</value>'+
                     '</cardData>'+
@@ -617,8 +673,8 @@ var MyWidget = SuperWidget.extend({
                     '<docapprovers></docapprovers>'+                                         
                     '<docsecurity></docsecurity>'+                        
                     '<expires>false</expires>'+            
-                    // '<parentDocumentId>7</parentDocumentId>'+
-                    '<parentDocumentId>204900</parentDocumentId>'+
+                    '<parentDocumentId>7</parentDocumentId>'+
+                    // '<parentDocumentId>204900</parentDocumentId>'+
                     '<reldocs></reldocs>'+
                 '</item>'+
             '</card>'+

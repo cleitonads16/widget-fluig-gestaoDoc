@@ -13,6 +13,7 @@ application.version=${build.version}-${build.revision}
 view.file=view.ftl
 edit.file=edit.ftl
 locale.file.base.name=cadastroComercial
+application.resource.component.1=fluigfilter
 application.resource.js.1=/resources/js/cadastroComercial.js
 application.resource.css.2=/resources/css/cadastroComercial.css
 application.resource.js.3=/resources/js/jquery.mask.min.js
