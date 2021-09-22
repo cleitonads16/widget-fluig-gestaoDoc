@@ -117,7 +117,7 @@ function clearValue() {
     const clearSelect = "SELECIONE"
 
     $("#unidade").val(clearSelect)
-    $("#codigo").val(clearInput)
+    // $("#codigo").val(clearInput)
     $("#cnpj").val(clearInput)
     $("#empresa").val(clearInput)
     $("#telefone").val(clearInput)
@@ -128,7 +128,7 @@ function clearValue() {
     $("#origem").val(clearSelect)
     $("#cidade").val(clearInput)
     $("#segmento").val(clearSelect)
-    $("#esn").val(clearSelect)
+    $("#esn").val(clearInput)
     $("#workArea").val(clearInput)  
     $("#produto").val(clearSelect)  
     $("#modalidade").val(clearSelect)  
@@ -150,7 +150,7 @@ function clearValue() {
 
 function bordas(){
     
-    $("#codigo").css({"border-color" : "#CCCCCC", "padding": "2px"})
+    // $("#codigo").css({"border-color" : "#CCCCCC", "padding": "2px"})
     $("#cnpj").css({"border-color" : "#CCCCCC", "padding": "2px"})
     $("#empresa").css({"border-color" : "#CCCCCC", "padding": "2px"})
     $("#telefone").css({"border-color" : "#CCCCCC", "padding": "2px"})
@@ -179,5 +179,7 @@ function bordas(){
     $("#valorHora").css({"border-color" : "#CCCCCC", "padding": "2px"})
     $("#totalServico").css({"border-color" : "#CCCCCC", "padding": "2px"})
 }
+
+
 
 /*$(document).ready(function(){})*/

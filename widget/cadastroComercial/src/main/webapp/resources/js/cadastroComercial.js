@@ -17,6 +17,10 @@ var MyWidget = SuperWidget.extend({
         $("#divFormulario").hide()
         $("#btEditar").hide()
         $("#h3Editar").hide()
+        $("#RESERVA").hide()
+        $("#PIPELINE").hide()
+        $("#FORECAST").hide()
+        $("#FECHADA").hide()
         $("#outros").prop('disabled', true);
         $("#estagioStatus1").prop('disabled', true)
         $("#mensalidade").prop('disabled', true)
@@ -67,24 +71,36 @@ var MyWidget = SuperWidget.extend({
         })
 
         $("#estagio").change(function(){
-            let limparOpcao = "SELECIONE"
             let valorEstagio = this.value
 
             switch(valorEstagio){
+                case "SELECIONE":
+                    $("#estagioStatus1").prop('disabled', true).val("SELECIONE")
+                    break;
                 case "PRIMEIRAVISITA":
-                    $("#estagioStatus1").prop('disabled', false).show()
+                    $("#estagioStatus1").prop('disabled', false).val("SELECIONE")
+                    $("#RESERVA").show()
+                    $("#PIPELINE").show()
+                    $("#FORECAST").hide()
+                    $("#FECHADA").hide()
                     break;
                 case "DEMONSTRACAO":
-                    $("#estagioStatus1").prop('disabled', false).show()
+                    $("#estagioStatus1").prop('disabled', false).val("SELECIONE")
+                    $("#PIPELINE").show()
+                    $("#FORECAST").show()
+                    $("#RESERVA").hide()
                     break;
                 case "ELABORACAODEPROPOSTA":
-                    $("#estagioStatus1").prop('disabled', false).show()
+                    $("#estagioStatus1").prop('disabled', false).val("SELECIONE")
+                    $("#PIPELINE").show()
+                    $("#FORECAST").show()
+                    $("#RESERVA").hide()
                     break;
                 case "NEGOCIACAO":
-                    $("#estagioStatus1").show().val($('option:contains("FORECAST")').val()).prop('disabled', true)
+                    $("#estagioStatus1").val($('option:contains("FORECAST")').val()).prop('disabled', true)
                     break;
                 case "FECHADA":
-                    $("#estagioStatus1").show().val($('option:contains("FECHADA")').val()).prop('disabled', true)
+                    $("#estagioStatus1").val($('option:contains("FECHADA")').val()).prop('disabled', true)
                     break;
                     default:
             }
@@ -184,7 +200,7 @@ var MyWidget = SuperWidget.extend({
             }
                                  
             $("#unidade").val(campo2)
-            $("#codigo").val(campo3)
+            // $("#codigo").val(campo3)
             $("#cnpj").val(campo4)
             $("#empresa").val(campo5)
             $("#telefone").val(campo6)
@@ -221,28 +237,30 @@ var MyWidget = SuperWidget.extend({
 
             let dsEditar = DatasetFactory.getDataset("formGestaoProspects", null, null, null);
             let idEditar = $("#id_editar").val();
-            
+
             for(let i=0; i<dsEditar.values.length; i++){
                 let idFormEditar = dsEditar.values[i]['documentid'];
                 if(idFormEditar == idEditar){
-
+                    
                     let _xml3 = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.dm.ecm.technology.totvs.com/">'+
                                 '<soapenv:Header/>'+
                                 '<soapenv:Body>'+
                                 '<ws:updateCardData>'+
                                     '<companyId>1</companyId>'+
-                                    '<username>academy.aluno</username>'+
-                                    '<password>academy.aluno</password>'+
+                                    '<username>admin</username>' +
+                                    '<password>!Senha@2020!</password>' +
+                                    // '<username>academy.aluno</username>'+
+                                    // '<password>academy.aluno</password>'+
                                     '<cardId>'+ idFormEditar +'</cardId>'+
                                     '<cardData>'+
                                         '<item>'+                                     
                                             '<field>unidade</field>'+                                       
                                             '<value>' + $("#unidade").val() + '</value>'+
                                         '</item>'+
-                                        '<item>'+            
-                                            '<field>codProspct</field>'+             
-                                            '<value>' + $("#codigo").val() + '</value>'+
-                                        '</item>'+
+                                        // '<item>'+            
+                                        //     '<field>codProspct</field>'+             
+                                        //     '<value>' + $("#codigo").val() + '</value>'+
+                                        // '</item>'+
                                         '<item>'+            
                                             '<field>cnpj</field>'+             
                                             '<value>' + $("#cnpj").val() + '</value>'+
@@ -378,7 +396,7 @@ var MyWidget = SuperWidget.extend({
                         error: function (error) {
                             FLUIGC.toast({
                                 title: "Erro",
-                                message: error + ' ao tentar editar o cadastro',
+                                message: error + ' ao tentar editar o cadastro, entre em contato com suporte Fluig',
                                 type: 'danger',
                             });
                         }
@@ -387,50 +405,48 @@ var MyWidget = SuperWidget.extend({
             }
 
             setTimeout(function(){ window.location.reload(); }, 1000);
+            
         })
-
-        // autocomplete
-        // let dsComplete = DatasetFactory.getDataset('formGestaoProspects', null, null, null);
-        // let states = [];
-
-        // for (let i = 0; i < dsComplete.values.length; i++) {
-        //     states.push(dsComplete.values[i]['esn']);
-        // }
-        
-        // $("#esn" ).autocomplete({
-        //     source: states
-        //   });
-        
     },
   
     //BIND de eventos
     bindings: {
         local: {
-            'enviar'     : ['click_validarCampos'],
-            'excluir'    : ['click_excluirProjetos']
+            'enviar'  : ['click_validarCampos'],
+            'excluir' : ['click_excluirProjetos'],
+            'esn'     : ['keypress_autoCompletar']
+            // 'sair'    : ['click_atualizarDiv']
             }
         },
         global: {
             
     },
- 
+
+    // atualizarDiv: function(){
+    //     console.log("ATUALIZA DIV")
+    //     var myLoading1 = FLUIGC.loading('#divTabela');
+    //     // We can show the message of loading
+    //     myLoading1.show();
+    //     this.tabelaDeDados()
+    //     myLoading1.hide();
+    // },
+
     // tabela de dados tela principal
     tabelaDeDados: function() {
+        console.log('TABELA DE DADOS')
         let ds = DatasetFactory.getDataset('formGestaoProspects', null, null, null);
         let html = "";
-        let states = [];
 
         for (let i = 0; i < ds.values.length; i++){
             let id = ds.values[i]['documentid'];
-            let codigo = ds.values[i]['codProspct'];
+            let cnpj = ds.values[i]['cnpj'];
             let empresa = ds.values[i]['empresa'];
             let esn = ds.values[i]['esn'];
             let status = ds.values[i]['status'];
-            states.push(esn);
            
             html += "<tr class='tr_class'>"+
                 '<td><input type="checkbox" name="checkExcuir" class="cbxSelect" value="'+ id +'" data-checkboxTb/><input type="hidden" class="id_documento" value="' + id + '"/></td>'+
-                "<td>" + codigo + "</td>"+
+                "<td>" + cnpj + "</td>"+
                 "<td>" + empresa +"</td>" +
                 "<td>" + esn +"</td>" +
                 '<td>' + status +'</td>' +
@@ -441,9 +457,6 @@ var MyWidget = SuperWidget.extend({
 
         document.getElementById("tbodyTabela1").innerHTML = html
 
-        $("#esn" ).autocomplete({
-            source: states
-          });
     },
 
     validarCampos: function (){
@@ -451,10 +464,10 @@ var MyWidget = SuperWidget.extend({
         if($("#unidade").val() == "SELECIONE"){
             $("#unidade").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar()
-        }else if($("#codigo").val() == ""){
+        }/*else if($("#codigo").val() == ""){
             $("#codigo").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar()
-        }else if($("#cnpj").val() == ""){
+        }*/else if($("#cnpj").val() == ""){
             $("#cnpj").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar()
         }else if($("#empresa").val() == ""){
@@ -484,7 +497,7 @@ var MyWidget = SuperWidget.extend({
         }else if( $("#segmento").val() == "SELECIONE"){
            $("#segmento").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar() 
-        }else if($("#esn").val() == "SELECIONE"){
+        }else if($("#esn").val() == ""){
             $("#esn").css({"border-color" : "#F00", "padding": "2px"})
             msgValidar() 
         }else if($("#workArea").val() == ""){
@@ -545,10 +558,10 @@ var MyWidget = SuperWidget.extend({
         '<soapenv:Body>'+
         '<ws:create>'+
             '<companyId>1</companyId>'+
-            // '<username>admin</username>' +
-            // '<password>!Senha@2020!</password>' +
-            '<username>academy.aluno</username>'+
-            '<password>academy.aluno</password>'+
+            '<username>admin</username>' +
+            '<password>!Senha@2020!</password>' +
+            // '<username>academy.aluno</username>'+
+            // '<password>academy.aluno</password>'+
             '<card>'+         
                 '<item>'+
                     '<attachs></attachs>'+            
@@ -556,10 +569,10 @@ var MyWidget = SuperWidget.extend({
                     '<field>unidade</field>'+
                     '<value>' + $("#unidade").val() + '</value>'+
                     '</cardData>'+
-                    '<cardData>'+
-                    '<field>codProspct</field>'+
-                    '<value>' + $("#codigo").val() + '</value>'+
-                    '</cardData>'+
+                    // '<cardData>'+
+                    // '<field>codProspct</field>'+
+                    // '<value>' + $("#codigo").val() + '</value>'+
+                    // '</cardData>'+
                     '<cardData>'+
                     '<field>cnpj</field>'+
                     '<value>' + $("#cnpj").val() + '</value>'+
@@ -673,8 +686,8 @@ var MyWidget = SuperWidget.extend({
                     '<docapprovers></docapprovers>'+                                         
                     '<docsecurity></docsecurity>'+                        
                     '<expires>false</expires>'+            
-                    '<parentDocumentId>7</parentDocumentId>'+
-                    // '<parentDocumentId>204900</parentDocumentId>'+
+                    // '<parentDocumentId>7</parentDocumentId>'+
+                    '<parentDocumentId>204900</parentDocumentId>'+
                     '<reldocs></reldocs>'+
                 '</item>'+
             '</card>'+
@@ -727,8 +740,10 @@ var MyWidget = SuperWidget.extend({
                                 '<soapenv:Body>'+
                                 '<ws:deleteCard>'+
                                     '<companyId>1</companyId>'+
-                                    '<username>academy.aluno</username>'+
-                                    '<password>academy.aluno</password>'+
+                                    '<username>admin</username>' +
+                                    '<password>!Senha@2020!</password>' +
+                                    // '<username>academy.aluno</username>'+
+                                    // '<password>academy.aluno</password>'+
                                     '<cardId>'+ check[i].value +'</cardId>'+
                                 '</ws:deleteCard>'+
                                 '</soapenv:Body>'+
@@ -741,26 +756,49 @@ var MyWidget = SuperWidget.extend({
                     data: _xml2,
                     crossDomain: true,
                     success: function (data) {
-                        if(i == 0){
-                            console.log(check.nodeList + " - " + i)
-                        }
+
+                        FLUIGC.toast({
+                            title: 'Sucesso, ',
+                            message: " item excluído",
+                            type: 'success',
+                        });
                         
-                        // FLUIGC.toast({
-                        //         title: '',
-                        //         message: "Os itens selecionados foram excluídos com sucesso",
-                        //         type: 'success'
-                        //     });
+                        
                     },
-                    error: function (error) {}
+                    error: function (error) {
+
+                        FLUIGC.toast({
+                            title: 'Erro',
+                            message: error + ' ao tentar excluír o cadastro, entre em contato com suporte Fluig',
+                            type: 'danger'
+                        });
+                    }
                 });
 
             }
 
             check[i].parentNode.parentNode.remove()
         }
-
+        
         $('#btExcluir').css('display', 'none')
   
-    }
+    },
+
+    // Autocompletar campo ESN
+    autoCompletar: function(){
+        
+        let c1 = DatasetFactory.createConstraint('colleagueGroupPK.groupId', 'ESN', 'ESN', ConstraintType.MUST)
+        let dsGroup = DatasetFactory.getDataset('colleagueGroup', null, new Array(c1), null)
+        let arrGroup = [];
+
+        for (let i = 0; i < dsGroup.values.length; i++){
+            let group = dsGroup.values[i]['colleagueGroupPK.colleagueId']
+            arrGroup.push(group)
+        }
+
+        $("#esn" ).autocomplete({
+            source: arrGroup
+          });
+    }   
 
 });

@@ -33,7 +33,7 @@
                                         <thead class="scroll-thead">
                                             <tr class="info">
                                                 <td><b><input type="checkbox" id="chk_tabela1" data-checkboxTb1></b></td>
-                                                <th><b>Código Prospect</b></th>
+                                                <th><b>CNPJ</b></th>
                                                 <th><b>Empresa</b></th>
                                                 <th><b>ESN</b></th>
                                                 <th><b>Status</b></th>
@@ -61,15 +61,15 @@
                                         </select>
                                         <input type="hidden" id="id_editar" name="id_editar">
                                     </div>
-                                    <div class="col-md-2">
+                                    <#--  <div class="col-md-2">
                                         <label for="codigo">Código Prospect:</label>
                                         <input type="text" id="codigo" name="codigo" class="form-control"/>
-                                    </div>
-                                    <div class="col-md-2">
+                                    </div>  -->
+                                    <div class="col-md-3">
                                         <label for="cnpj">CNPJ:</label>
-                                        <input type="text" id="cnpj" name="cnpj" class="form-control" onkeypress='mascaraMutuario(this,cpfCnpj)' onblur='clearTimeout()'/>
+                                        <input type="text" id="cnpj" name="cnpj" class="form-control" onkeypress='mascaraMutuario(this,cpfCnpj)' onblur='clearTimeout()' maxlength="18"/>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <label for="empresa">Empresa:</label>
                                         <input type="text" id="empresa" name="empresa" class="form-control"/>
                                     </div> 
@@ -96,7 +96,7 @@
                                         <select id="entidade" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
                                             <option value="PROSPECT">PROSPECT</option>
-                                            <option value="CLIENTE">TSUL</option>
+                                            <option value="CLIENTE">CLIENTE</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2">
@@ -139,7 +139,8 @@
                                     </div>        
                                 	<div class="col-md-2">
                                         <label for="esn">ESN:</label>
-                                        <input type="text" id="esn" name="esn" class="form-control"/>
+                                        <input type="text" id="esn" name="esn" class="form-control" data-esn/>
+                                        <#--  <input type="hidden" id="id_matricula " name="id_matricula ">  -->
                                         <#--  <select id="esn" class="form-control">
                                             <option value="SELECIONE">SELECIONE</option>
                                             <option value="CARLA">CARLA</option>
@@ -150,7 +151,7 @@
                                             <option value="MARCELA">MARCELA</option>
                                         </select>  -->
                                     </div>
-                                    <div class="form-group col-xs-6 col-sm-4 col-md-2 col-lg-2">
+                                    <div class="form-group col-md-2">
                                         <label for="workArea">WorkArea</label> 
                                         <input type="text" name="workArea" id="workArea" class="form-control"/>
                                     </div>
@@ -216,10 +217,10 @@
                                         <label for="estagioStatus">Status:</label>
                                         <select id="estagioStatus1" class="form-control"> 
                                             <option value="SELECIONE">SELECIONE</option>                                           
-                                            <option value="RESERVA">RESERVA</option>
-                                            <option value="PIPELINE">PIPELINE</option> 
-                                            <option value="FORECAST">FORECAST </option> 
-                                            <option value="FECHADA">FECHADA</option>                              
+                                            <option id="RESERVA" value="RESERVA">RESERVA</option>
+                                            <option id="PIPELINE" value="PIPELINE">PIPELINE</option> 
+                                            <option id="FORECAST" value="FORECAST">FORECAST </option> 
+                                            <option id="FECHADA" value="FECHADA">FECHADA</option>                              
 
                                         </select>
                                         <#--  <select id="estagioStatus2" class="form-control">
